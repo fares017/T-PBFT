@@ -1,0 +1,58 @@
+\hypertarget{node_8h}{}\doxysection{node.\+h File Reference}
+\label{node_8h}\index{node.h@{node.h}}
+
+
+Header file for the \mbox{\hyperlink{classNode}{Node}} class.  
+
+
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$salticidae/network.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}messages.\+h\char`\"{}}\newline
+Include dependency graph for node.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{node_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=270pt]{node_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classNode}{Node}}
+\begin{DoxyCompactList}\small\item\em Class representing a replication node in the network. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{node_8h_a811e8f3667f6d14ca4ee43196c4ff39e}{Net}} = salticidae\+::\+Peer\+Network$<$ \mbox{\hyperlink{config_8h_aa466ba158fd189d78e9c27b6f1f5a654}{opcode\+\_\+t}} $>$
+\item 
+using \mbox{\hyperlink{node_8h_ac8e2d75ef17f915e40ae75db9aa9a66d}{Address\+Network\+Vector}} = std\+::vector$<$ std\+::pair$<$ salticidae\+::\+Net\+Addr, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{handler_8h_a811e8f3667f6d14ca4ee43196c4ff39e}{Net}} $>$ $>$$>$
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Header file for the \mbox{\hyperlink{classNode}{Node}} class. 
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{node_8h_ac8e2d75ef17f915e40ae75db9aa9a66d}\label{node_8h_ac8e2d75ef17f915e40ae75db9aa9a66d}} 
+\index{node.h@{node.h}!AddressNetworkVector@{AddressNetworkVector}}
+\index{AddressNetworkVector@{AddressNetworkVector}!node.h@{node.h}}
+\doxysubsubsection{\texorpdfstring{AddressNetworkVector}{AddressNetworkVector}}
+{\footnotesize\ttfamily using \mbox{\hyperlink{node_8h_ac8e2d75ef17f915e40ae75db9aa9a66d}{Address\+Network\+Vector}} =  std\+::vector$<$std\+::pair$<$salticidae\+::\+Net\+Addr, std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{handler_8h_a811e8f3667f6d14ca4ee43196c4ff39e}{Net}}$>$ $>$$>$}
+
+\mbox{\Hypertarget{node_8h_a811e8f3667f6d14ca4ee43196c4ff39e}\label{node_8h_a811e8f3667f6d14ca4ee43196c4ff39e}} 
+\index{node.h@{node.h}!Net@{Net}}
+\index{Net@{Net}!node.h@{node.h}}
+\doxysubsubsection{\texorpdfstring{Net}{Net}}
+{\footnotesize\ttfamily using \mbox{\hyperlink{handler_8h_a811e8f3667f6d14ca4ee43196c4ff39e}{Net}} =  salticidae\+::\+Peer\+Network$<$\mbox{\hyperlink{config_8h_aa466ba158fd189d78e9c27b6f1f5a654}{opcode\+\_\+t}}$>$}
+

@@ -1,0 +1,12 @@
+<map id="handler.cpp" name="handler.cpp">
+<area shape="rect" id="node1" title="Implementation of the Handler class and its members." alt="" coords="163,5,260,32"/>
+<area shape="rect" id="node2" href="$handler_8h.html" title="Header file for the Handler class." alt="" coords="170,80,253,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="30,229,110,256"/>
+<area shape="rect" id="node4" title=" " alt="" coords="134,229,289,256"/>
+<area shape="rect" id="node5" href="$config_8h.html" title="Common configuration file." alt="" coords="265,304,339,331"/>
+<area shape="rect" id="node8" href="$messages_8h.html" title="Header file for the message types." alt="" coords="415,229,515,256"/>
+<area shape="rect" id="node10" href="$node_8h.html" title="Header file for the Node class." alt="" coords="270,155,337,181"/>
+<area shape="rect" id="node6" title=" " alt="" coords="263,379,330,405"/>
+<area shape="rect" id="node7" title=" " alt="" coords="354,379,413,405"/>
+<area shape="rect" id="node9" title=" " alt="" coords="465,304,595,331"/>
+</map>

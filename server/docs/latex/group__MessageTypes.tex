@@ -1,0 +1,78 @@
+\hypertarget{group__MessageTypes}{}\doxysection{Message types}
+\label{group__MessageTypes}\index{Message types@{Message types}}
+
+
+Different message types that are exchanged.  
+
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structMsgInvalid}{Msg\+Invalid}}
+\begin{DoxyCompactList}\small\item\em Invalid Message. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structMsgAck}{Msg\+Ack}}
+\begin{DoxyCompactList}\small\item\em Acknowledgement message. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structMsgString}{Msg\+String}}
+\begin{DoxyCompactList}\small\item\em String message. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structMsgVote}{Msg\+Vote}}
+\begin{DoxyCompactList}\small\item\em Vote message. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structMsgOp}{Msg\+Op}}
+\begin{DoxyCompactList}\small\item\em Operation message. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Different message types that are exchanged. 
+
+Each message has an opcode component that has to be unique, $<$ uint8\+\_\+t and be a message member. Two overloads for construction\+:
+\begin{DoxyItemize}
+\item Serialize object\+: Constructor to go from the message and its argument(s) to the serialized version. I.\+e. how a string is encapsulated with its length etc.
+\item De-\/\+Serialize object\+: Constructor to go from the serialized message (from the network) to go to the object.
+\end{DoxyItemize}
+
+Both overloads have to be implemented for each message type.
+
+\begin{DoxyNote}{Note}
+The messages that are implemented here are used as a reference to show how it could be done and do not have to be used for the implementation of a BFT protocol.
+\end{DoxyNote}
+Example code to be put in the \mbox{\hyperlink{messages_8h}{messages.\+h}} file. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{struct }MsgExample \{}
+\DoxyCodeLine{     \textcolor{comment}{// Unique opcode for the message}}
+\DoxyCodeLine{     \textcolor{keyword}{static} \textcolor{keyword}{const} \mbox{\hyperlink{config_8h_aa466ba158fd189d78e9c27b6f1f5a654}{opcode\_t}} opcode = 0x0;}
+\DoxyCodeLine{     \textcolor{comment}{// Serialized object that will be populated when sending and receiving a message.}}
+\DoxyCodeLine{     DataStream serialized;}
+\DoxyCodeLine{}
+\DoxyCodeLine{     \textcolor{comment}{// Constructor for message from object to serialized object i.e. sending a message.}}
+\DoxyCodeLine{     MsgExample(\textcolor{keyword}{const} std::string \&someMessage, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&someNumber);}
+\DoxyCodeLine{     \textcolor{comment}{// Constructor for receiving a message i.e. de-\/serializing the message to the object and its components.}}
+\DoxyCodeLine{     MsgExample(DataStream \&\&s);}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+The \mbox{\hyperlink{messages_8cpp}{messages.\+cpp}} file implements the actual serialization procedure\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{const} \mbox{\hyperlink{config_8h_aa466ba158fd189d78e9c27b6f1f5a654}{opcode\_t}} MsgExample::opcode;}
+\DoxyCodeLine{MsgExample::MsgExample(\textcolor{keyword}{const} std::string \&someMessage, \textcolor{keyword}{const} \textcolor{keywordtype}{int} \&someNumber) \{}
+\DoxyCodeLine{     \textcolor{comment}{// This can be used to serialize a string, the message length is best included first.}}
+\DoxyCodeLine{     \textcolor{comment}{// Convert byte order from host endianess to little-\/endian see this [link](https://man7.org/linux/man-\/pages/man3/endian.3.html).}}
+\DoxyCodeLine{     serialized << htole((uint32\_t)someMessage.length());}
+\DoxyCodeLine{     serialized << someMessage;}
+\DoxyCodeLine{     \textcolor{comment}{// We can simply append the someNumber since we know how large integers are from the C++ reference.}}
+\DoxyCodeLine{     serialized << someNumber;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{\mbox{\hyperlink{structMsgString_a7a2b2f86a80166f51108917874a0f58c}{MsgString::MsgString}}(DataStream \&\&s) \{}
+\DoxyCodeLine{     \textcolor{comment}{// We have to extract the length of the message first...}}
+\DoxyCodeLine{     uint32\_t len;}
+\DoxyCodeLine{     s >> len;}
+\DoxyCodeLine{     \textcolor{comment}{// Convert byte order from little-\/endian to host endianess see this [link](https://man7.org/linux/man-\/pages/man3/endian.3.html).}}
+\DoxyCodeLine{     len = letoh(len);}
+\DoxyCodeLine{     \textcolor{comment}{// .. before we can extract the message itself.}}
+\DoxyCodeLine{     someMessage = std::string((\textcolor{keyword}{const} \textcolor{keywordtype}{char} *)s.get\_data\_inplace(len), len);}
+\DoxyCodeLine{     \textcolor{comment}{// Since the integer size is known, we can simply extract our number.}}
+\DoxyCodeLine{     s >> someNumber;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ 

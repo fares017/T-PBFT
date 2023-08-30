@@ -1,0 +1,107 @@
+\hypertarget{config_8h}{}\doxysection{config.\+h File Reference}
+\label{config_8h}\index{config.h@{config.h}}
+
+
+Common configuration file.  
+
+
+{\ttfamily \#include $<$cstdint$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+Include dependency graph for config.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=192pt]{config_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=280pt]{config_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{config_8h_acba3510ce5a5909c88bc321929a9031c}{ADDRESS\+\_\+\+PORT}}~8123
+\begin{DoxyCompactList}\small\item\em Define the starting port that is used for the nodes. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{config_8h_a196d5a36c4126bfa58ee4ea50baaae39}{NUM\+\_\+\+NODES}}~4
+\begin{DoxyCompactList}\small\item\em Define the number of nodes/replicas to use. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{config_8h_a653e745f64132435aea89e460c4d460d}{CLIENT\+\_\+\+PORT}}~9000
+\begin{DoxyCompactList}\small\item\em Define the port that is used for the client connecting to the replicas. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{config_8h_acb84a306ee37479f97cf0b476560f027}{MAX\+\_\+\+MESSAGE\+\_\+\+SIZE}}~65536
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{config_8h_aa466ba158fd189d78e9c27b6f1f5a654}{opcode\+\_\+t}} = uint8\+\_\+t
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const std\+::string \mbox{\hyperlink{config_8h_a7b574d8fa067938069270eaf259a1e67}{ADDRESS\+\_\+\+STRING}} = \char`\"{}127.\+0.\+0.\+1\char`\"{}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Common configuration file. 
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{config_8h_acba3510ce5a5909c88bc321929a9031c}\label{config_8h_acba3510ce5a5909c88bc321929a9031c}} 
+\index{config.h@{config.h}!ADDRESS\_PORT@{ADDRESS\_PORT}}
+\index{ADDRESS\_PORT@{ADDRESS\_PORT}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{ADDRESS\_PORT}{ADDRESS\_PORT}}
+{\footnotesize\ttfamily \#define ADDRESS\+\_\+\+PORT~8123}
+
+
+
+Define the starting port that is used for the nodes. 
+
+\mbox{\Hypertarget{config_8h_a653e745f64132435aea89e460c4d460d}\label{config_8h_a653e745f64132435aea89e460c4d460d}} 
+\index{config.h@{config.h}!CLIENT\_PORT@{CLIENT\_PORT}}
+\index{CLIENT\_PORT@{CLIENT\_PORT}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{CLIENT\_PORT}{CLIENT\_PORT}}
+{\footnotesize\ttfamily \#define CLIENT\+\_\+\+PORT~9000}
+
+
+
+Define the port that is used for the client connecting to the replicas. 
+
+\mbox{\Hypertarget{config_8h_acb84a306ee37479f97cf0b476560f027}\label{config_8h_acb84a306ee37479f97cf0b476560f027}} 
+\index{config.h@{config.h}!MAX\_MESSAGE\_SIZE@{MAX\_MESSAGE\_SIZE}}
+\index{MAX\_MESSAGE\_SIZE@{MAX\_MESSAGE\_SIZE}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_MESSAGE\_SIZE}{MAX\_MESSAGE\_SIZE}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+MESSAGE\+\_\+\+SIZE~65536}
+
+\mbox{\Hypertarget{config_8h_a196d5a36c4126bfa58ee4ea50baaae39}\label{config_8h_a196d5a36c4126bfa58ee4ea50baaae39}} 
+\index{config.h@{config.h}!NUM\_NODES@{NUM\_NODES}}
+\index{NUM\_NODES@{NUM\_NODES}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{NUM\_NODES}{NUM\_NODES}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+NODES~4}
+
+
+
+Define the number of nodes/replicas to use. 
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{config_8h_aa466ba158fd189d78e9c27b6f1f5a654}\label{config_8h_aa466ba158fd189d78e9c27b6f1f5a654}} 
+\index{config.h@{config.h}!opcode\_t@{opcode\_t}}
+\index{opcode\_t@{opcode\_t}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{opcode\_t}{opcode\_t}}
+{\footnotesize\ttfamily using \mbox{\hyperlink{config_8h_aa466ba158fd189d78e9c27b6f1f5a654}{opcode\+\_\+t}} =  uint8\+\_\+t}
+
+Define the opcode size for the maximum number of unique messages. In our case 8-\/bit unsigned integer 0-\/255. 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{config_8h_a7b574d8fa067938069270eaf259a1e67}\label{config_8h_a7b574d8fa067938069270eaf259a1e67}} 
+\index{config.h@{config.h}!ADDRESS\_STRING@{ADDRESS\_STRING}}
+\index{ADDRESS\_STRING@{ADDRESS\_STRING}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{ADDRESS\_STRING}{ADDRESS\_STRING}}
+{\footnotesize\ttfamily const std\+::string ADDRESS\+\_\+\+STRING = \char`\"{}127.\+0.\+0.\+1\char`\"{}}
+
+Define the IP address to use for the nodes. In our case we want to use localhost. 

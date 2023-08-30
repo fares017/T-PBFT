@@ -1,0 +1,109 @@
+\hypertarget{group__MessageHandlerGroup}{}\doxysection{Message specific handlers}
+\label{group__MessageHandlerGroup}\index{Message specific handlers@{Message specific handlers}}
+
+
+Handlers for the different message types.  
+
+
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_ga53665f135e7bc71d53dd1e645abc1a3b}{Node\+::string\+\_\+handler}} (\mbox{\hyperlink{structMsgString}{Msg\+String}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgString}{Msg\+String}} message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_ga364091a5585371e28e68564c3d571f5f}{Node\+::vote\+\_\+handler}} (\mbox{\hyperlink{structMsgVote}{Msg\+Vote}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgVote}{Msg\+Vote}} message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_gab5ec32f0537e6c913d4fb96a7188bfbc}{Node\+::operation\+\_\+handler}} (\mbox{\hyperlink{structMsgOp}{Msg\+Op}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgOp}{Msg\+Op}} message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_gae7fd57d493bd55c750fec06e9066a99d}{Node\+::ack\+\_\+handler}} (\mbox{\hyperlink{structMsgAck}{Msg\+Ack}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgAck}{Msg\+Ack}} message gets received. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handlers for the different message types. 
+
+A handler is called when its specific message type gets received. Operations resulting from receiving that message can then be done in the body of the member function.
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & The message on which this member function was called. \\
+\hline
+{\em conn} & The connection that sent this message.\\
+\hline
+\end{DoxyParams}
+An explained example implementation follows\+:
+
+Code in the \mbox{\hyperlink{node_8h}{node.\+h}} file\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{// We define the example\_handler that gets called when a MsgExample message gets received.}}
+\DoxyCodeLine{\textcolor{keywordtype}{void} example\_handler(MsgExample \&\&msg, \textcolor{keyword}{const} Net::conn\_t \&conn);}
+
+\end{DoxyCode}
+
+
+Code in the \mbox{\hyperlink{node_8cpp}{node.\+cpp}} file\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{void} Node::example\_handler(MsgExample \&\&msg, \textcolor{keyword}{const} Net::conn\_t \&conn) \{}
+\DoxyCodeLine{     \textcolor{comment}{// Do stuff here}}
+\DoxyCodeLine{     \textcolor{comment}{// For example print the message...:}}
+\DoxyCodeLine{     cout << \textcolor{stringliteral}{"{}We got "{}} << msg.someMessage;}
+\DoxyCodeLine{     \textcolor{comment}{// ... and the number:}}
+\DoxyCodeLine{     cout << \textcolor{stringliteral}{"{} and the number "{}} << msg.someNumber << \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Finally we also have to register the handler, this is done in the \mbox{\hyperlink{classNode_aaca6ae7e9e2568f8e97ae77245aabe54}{Node\+::reg\+\_\+handlers()}} (\mbox{\hyperlink{node_8cpp}{node.\+cpp}}) member function with\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{void} \mbox{\hyperlink{classNode_aaca6ae7e9e2568f8e97ae77245aabe54}{Node::reg\_handlers}}() \{}
+\DoxyCodeLine{     ...}
+\DoxyCodeLine{     \mbox{\hyperlink{classNode_aaf4a1a712d49c3b816a5d82687102bab}{peerNet}}-\/>reg\_handler(salticidae::generic\_bind(\&Node::example\_handler, \textcolor{keyword}{this}, \_1, \_2));}
+\DoxyCodeLine{     ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The example\+\_\+handler will now be called when we receive a Msg\+Example message. Since we are working with classes and class instances, we could also update the state of the replica by updating \mbox{\hyperlink{classNode}{Node}} member variables, for example increase a counter each time we get a specific message. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{group__MessageHandlerGroup_gae7fd57d493bd55c750fec06e9066a99d}\label{group__MessageHandlerGroup_gae7fd57d493bd55c750fec06e9066a99d}} 
+\index{Message specific handlers@{Message specific handlers}!ack\_handler@{ack\_handler}}
+\index{ack\_handler@{ack\_handler}!Message specific handlers@{Message specific handlers}}
+\doxysubsubsection{\texorpdfstring{ack\_handler()}{ack\_handler()}}
+{\footnotesize\ttfamily void Node\+::ack\+\_\+handler (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structMsgAck}{Msg\+Ack}} \&\&}]{msg,  }\item[{const Net\+::conn\+\_\+t \&}]{conn }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgAck}{Msg\+Ack}} message gets received. 
+
+Simple handler printing that an ACK got received, which node sent it and which node received the ACK message. \mbox{\Hypertarget{group__MessageHandlerGroup_gab5ec32f0537e6c913d4fb96a7188bfbc}\label{group__MessageHandlerGroup_gab5ec32f0537e6c913d4fb96a7188bfbc}} 
+\index{Message specific handlers@{Message specific handlers}!operation\_handler@{operation\_handler}}
+\index{operation\_handler@{operation\_handler}!Message specific handlers@{Message specific handlers}}
+\doxysubsubsection{\texorpdfstring{operation\_handler()}{operation\_handler()}}
+{\footnotesize\ttfamily void Node\+::operation\+\_\+handler (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structMsgOp}{Msg\+Op}} \&\&}]{msg,  }\item[{const Net\+::conn\+\_\+t \&}]{conn }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgOp}{Msg\+Op}} message gets received. 
+
+\mbox{\Hypertarget{group__MessageHandlerGroup_ga53665f135e7bc71d53dd1e645abc1a3b}\label{group__MessageHandlerGroup_ga53665f135e7bc71d53dd1e645abc1a3b}} 
+\index{Message specific handlers@{Message specific handlers}!string\_handler@{string\_handler}}
+\index{string\_handler@{string\_handler}!Message specific handlers@{Message specific handlers}}
+\doxysubsubsection{\texorpdfstring{string\_handler()}{string\_handler()}}
+{\footnotesize\ttfamily void Node\+::string\+\_\+handler (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structMsgString}{Msg\+String}} \&\&}]{msg,  }\item[{const Net\+::conn\+\_\+t \&}]{conn }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgString}{Msg\+String}} message gets received. 
+
+\mbox{\Hypertarget{group__MessageHandlerGroup_ga364091a5585371e28e68564c3d571f5f}\label{group__MessageHandlerGroup_ga364091a5585371e28e68564c3d571f5f}} 
+\index{Message specific handlers@{Message specific handlers}!vote\_handler@{vote\_handler}}
+\index{vote\_handler@{vote\_handler}!Message specific handlers@{Message specific handlers}}
+\doxysubsubsection{\texorpdfstring{vote\_handler()}{vote\_handler()}}
+{\footnotesize\ttfamily void Node\+::vote\+\_\+handler (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structMsgVote}{Msg\+Vote}} \&\&}]{msg,  }\item[{const Net\+::conn\+\_\+t \&}]{conn }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgVote}{Msg\+Vote}} message gets received. 
+

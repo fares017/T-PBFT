@@ -1,0 +1,94 @@
+\hypertarget{classHandler}{}\doxysection{Handler Class Reference}
+\label{classHandler}\index{Handler@{Handler}}
+
+
+Class handling the creation and interconnect of the replicas.  
+
+
+
+
+{\ttfamily \#include $<$handler.\+h$>$}
+
+
+
+Collaboration diagram for Handler\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classHandler__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classHandler_a530b1438a09d17d0f77c2af197b778d5}{Handler}} (const salticidae\+::\+Event\+Context \&ec, const Net\+::\+Config config)
+\begin{DoxyCompactList}\small\item\em Constructor creating a handler. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{handler_8h_aca20d1dcd2d00bff8fc6183e3215688d}{Node\+Vector}} $\ast$ \mbox{\hyperlink{classHandler_a1e1ff7c01b34b9b0377cfe8c23ae3f70}{get\+\_\+nodes}} ()
+\begin{DoxyCompactList}\small\item\em Return the nodes that the handler manages. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{handler_8h_aca20d1dcd2d00bff8fc6183e3215688d}{Node\+Vector}} \mbox{\hyperlink{classHandler_abbc7bec42180c4df9065208ff0588786}{nodes}}
+\begin{DoxyCompactList}\small\item\em Nodes that this handler manages. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class handling the creation and interconnect of the replicas. 
+
+\mbox{\hyperlink{classHandler}{Handler}} class creating the interconnection between the different nodes and creating the number of \mbox{\hyperlink{classNode}{Node}} instances asked for.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ec} & The execution context for the networks of the nodes. \\
+\hline
+{\em config} & The configuration for the networks of the nodes. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classHandler_a530b1438a09d17d0f77c2af197b778d5}\label{classHandler_a530b1438a09d17d0f77c2af197b778d5}} 
+\index{Handler@{Handler}!Handler@{Handler}}
+\index{Handler@{Handler}!Handler@{Handler}}
+\doxysubsubsection{\texorpdfstring{Handler()}{Handler()}}
+{\footnotesize\ttfamily Handler\+::\+Handler (\begin{DoxyParamCaption}\item[{const salticidae\+::\+Event\+Context \&}]{ec,  }\item[{const Net\+::\+Config}]{config }\end{DoxyParamCaption})}
+
+
+
+Constructor creating a handler. 
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classHandler_a1e1ff7c01b34b9b0377cfe8c23ae3f70}\label{classHandler_a1e1ff7c01b34b9b0377cfe8c23ae3f70}} 
+\index{Handler@{Handler}!get\_nodes@{get\_nodes}}
+\index{get\_nodes@{get\_nodes}!Handler@{Handler}}
+\doxysubsubsection{\texorpdfstring{get\_nodes()}{get\_nodes()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{handler_8h_aca20d1dcd2d00bff8fc6183e3215688d}{Node\+Vector}}$\ast$ Handler\+::get\+\_\+nodes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Return the nodes that the handler manages. 
+
+\begin{DoxyReturn}{Returns}
+nodes 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classHandler_abbc7bec42180c4df9065208ff0588786}\label{classHandler_abbc7bec42180c4df9065208ff0588786}} 
+\index{Handler@{Handler}!nodes@{nodes}}
+\index{nodes@{nodes}!Handler@{Handler}}
+\doxysubsubsection{\texorpdfstring{nodes}{nodes}}
+{\footnotesize\ttfamily \mbox{\hyperlink{handler_8h_aca20d1dcd2d00bff8fc6183e3215688d}{Node\+Vector}} Handler\+::nodes\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Nodes that this handler manages. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{handler_8h}{handler.\+h}}\item 
+\mbox{\hyperlink{handler_8cpp}{handler.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,293 @@
+\hypertarget{classNode}{}\doxysection{Node Class Reference}
+\label{classNode}\index{Node@{Node}}
+
+
+Class representing a replication node in the network.  
+
+
+
+
+{\ttfamily \#include $<$node.\+h$>$}
+
+
+
+Collaboration diagram for Node\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=330pt]{classNode__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNode_a020b41d6495fd4e4f482381d20ec9527}{Node}} (const salticidae\+::\+Event\+Context \&ec, const Net\+::\+Config config, const salticidae\+::\+Net\+Addr paddr, const salticidae\+::\+Peer\+Id pid)
+\begin{DoxyCompactList}\small\item\em Constructor creating a new node. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNode_ad7a34779cad45d997bfd6d3d8043c75f}{Node}} ()
+\item 
+void \mbox{\hyperlink{classNode_a5b247d1bb5eeec1955684d365c0721a5}{set\+\_\+peers}} (std\+::vector$<$ salticidae\+::\+Peer\+Id $>$ \mbox{\hyperlink{classNode_ad8dd86a0c0b227070082718f7f1138ff}{peers}})
+\begin{DoxyCompactList}\small\item\em Set the vector of known peers for this node. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNode_aaca6ae7e9e2568f8e97ae77245aabe54}{reg\+\_\+handlers}} ()
+\begin{DoxyCompactList}\small\item\em Register message handlers. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classNode_a03d5e7540a5c7ee5b1020b047d11dd07}{get\+\_\+id}} ()
+\begin{DoxyCompactList}\small\item\em Return the trimmed Peer\+Id (in HEX) as an ID for this node. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classNode_a0d32c76985fe5a3e0c802d4e027ce416}{get\+\_\+id}} (bool full)
+\begin{DoxyCompactList}\small\item\em If \char`\"{}full=true\char`\"{}, then return the complete Peer\+Id (in HEX). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{handler_8h_a811e8f3667f6d14ca4ee43196c4ff39e}{Net}} $>$ \mbox{\hyperlink{classNode_aaf4a1a712d49c3b816a5d82687102bab}{peer\+Net}}
+\begin{DoxyCompactList}\small\item\em Networking for this node. \end{DoxyCompactList}\item 
+salticidae\+::\+Net\+Addr \mbox{\hyperlink{classNode_a9ca79e01d0318cb1a6bb0cd354ecea88}{peer\+Addr}}
+\begin{DoxyCompactList}\small\item\em Network address of this node. \end{DoxyCompactList}\item 
+salticidae\+::\+Peer\+Id \mbox{\hyperlink{classNode_a705bb972eea4be61e590669cf13374d9}{peer\+Id}}
+\begin{DoxyCompactList}\small\item\em Peer\+Id for this node. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_ga53665f135e7bc71d53dd1e645abc1a3b}{string\+\_\+handler}} (\mbox{\hyperlink{structMsgString}{Msg\+String}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgString}{Msg\+String}} message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_ga364091a5585371e28e68564c3d571f5f}{vote\+\_\+handler}} (\mbox{\hyperlink{structMsgVote}{Msg\+Vote}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgVote}{Msg\+Vote}} message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_gab5ec32f0537e6c913d4fb96a7188bfbc}{operation\+\_\+handler}} (\mbox{\hyperlink{structMsgOp}{Msg\+Op}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgOp}{Msg\+Op}} message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_gae7fd57d493bd55c750fec06e9066a99d}{ack\+\_\+handler}} (\mbox{\hyperlink{structMsgAck}{Msg\+Ack}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgAck}{Msg\+Ack}} message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNode_a8e1cb0aaeec54d246e6aeec6e23d7ca0}{unknown\+\_\+peer\+\_\+handler}} (const salticidae\+::\+Net\+Addr \&addr, const salticidae\+::\+X509 $\ast$cert)
+\item 
+void \mbox{\hyperlink{classNode_a7519d229462b06026aaea36b3308f9fc}{error\+\_\+handler}} (std\+::\+\_\+\+\_\+exception\+\_\+ptr\+::exception\+\_\+ptr exception\+\_\+ptr, bool idk, int huh)
+\begin{DoxyCompactList}\small\item\em Useful for debugging purposes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNode_a76590e95b6dc089e697d6bc1dbf00db7}{peer\+\_\+handler}} (const Net\+::conn\+\_\+t \&conn, bool connected)
+\begin{DoxyCompactList}\small\item\em Useful for debugging purposes. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classNode_a00f2b21af116cf63205b74a9c5cc0c31}{conn\+\_\+handler}} (const Conn\+Pool\+::conn\+\_\+t \&conn, bool connected)
+\begin{DoxyCompactList}\small\item\em Handler for when a connection is made, not needed but useful for debugging. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ salticidae\+::\+Peer\+Id $>$ \mbox{\hyperlink{classNode_ad8dd86a0c0b227070082718f7f1138ff}{peers}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{classNode_aa6b3592c4db64fa6cee507ee6261080c}{num\+\_\+acks}} = 0
+\item 
+std\+::unordered\+\_\+map$<$ salticidae\+::\+Peer\+Id, bool $>$ \mbox{\hyperlink{classNode_a327383ced5f40c09b7dc9c035aa6356f}{pidmap}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class representing a replication node in the network. 
+
+\mbox{\hyperlink{classNode}{Node}} class represents a peer/replica in the network. Handlers are defined as member functions and are called when a given message type gets received. Since for each peer/replica we have a different \mbox{\hyperlink{classNode}{Node}} instance, replica states can be implemented by manipulating member variables on incoming messages.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ec} & The execution context for this node\textquotesingle{}s network. \\
+\hline
+{\em config} & The configuration for this node\textquotesingle{}s network. \\
+\hline
+{\em paddr} & The networking address for this node. \\
+\hline
+{\em pid} & The peer id for this node, also used as an ID for this node. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classNode_a020b41d6495fd4e4f482381d20ec9527}\label{classNode_a020b41d6495fd4e4f482381d20ec9527}} 
+\index{Node@{Node}!Node@{Node}}
+\index{Node@{Node}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{Node()}{Node()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Node\+::\+Node (\begin{DoxyParamCaption}\item[{const salticidae\+::\+Event\+Context \&}]{ec,  }\item[{const Net\+::\+Config}]{config,  }\item[{const salticidae\+::\+Net\+Addr}]{paddr,  }\item[{const salticidae\+::\+Peer\+Id}]{pid }\end{DoxyParamCaption})}
+
+
+
+Constructor creating a new node. 
+
+\mbox{\Hypertarget{classNode_ad7a34779cad45d997bfd6d3d8043c75f}\label{classNode_ad7a34779cad45d997bfd6d3d8043c75f}} 
+\index{Node@{Node}!Node@{Node}}
+\index{Node@{Node}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{Node()}{Node()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Node\+::\+Node (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classNode_a00f2b21af116cf63205b74a9c5cc0c31}\label{classNode_a00f2b21af116cf63205b74a9c5cc0c31}} 
+\index{Node@{Node}!conn\_handler@{conn\_handler}}
+\index{conn\_handler@{conn\_handler}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{conn\_handler()}{conn\_handler()}}
+{\footnotesize\ttfamily bool Node\+::conn\+\_\+handler (\begin{DoxyParamCaption}\item[{const Conn\+Pool\+::conn\+\_\+t \&}]{conn,  }\item[{bool}]{connected }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Handler for when a connection is made, not needed but useful for debugging. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em conn} & The connection trying to connect. \\
+\hline
+{\em connected} & Whether the connection connected or disconnected \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{classNode_a76590e95b6dc089e697d6bc1dbf00db7}{peer\+\_\+handler}} 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{classNode_a7519d229462b06026aaea36b3308f9fc}\label{classNode_a7519d229462b06026aaea36b3308f9fc}} 
+\index{Node@{Node}!error\_handler@{error\_handler}}
+\index{error\_handler@{error\_handler}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{error\_handler()}{error\_handler()}}
+{\footnotesize\ttfamily void Node\+::error\+\_\+handler (\begin{DoxyParamCaption}\item[{std\+::\+\_\+\+\_\+exception\+\_\+ptr\+::exception\+\_\+ptr}]{exception\+\_\+ptr,  }\item[{bool}]{idk,  }\item[{int}]{huh }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Useful for debugging purposes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em exception\+\_\+ptr} & Pointer to where the exception happened. \\
+\hline
+{\em idk} & \\
+\hline
+{\em huh} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNode_a03d5e7540a5c7ee5b1020b047d11dd07}\label{classNode_a03d5e7540a5c7ee5b1020b047d11dd07}} 
+\index{Node@{Node}!get\_id@{get\_id}}
+\index{get\_id@{get\_id}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{get\_id()}{get\_id()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily std\+::string Node\+::get\+\_\+id (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Return the trimmed Peer\+Id (in HEX) as an ID for this node. 
+
+\mbox{\Hypertarget{classNode_a0d32c76985fe5a3e0c802d4e027ce416}\label{classNode_a0d32c76985fe5a3e0c802d4e027ce416}} 
+\index{Node@{Node}!get\_id@{get\_id}}
+\index{get\_id@{get\_id}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{get\_id()}{get\_id()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily std\+::string Node\+::get\+\_\+id (\begin{DoxyParamCaption}\item[{bool}]{full }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+If \char`\"{}full=true\char`\"{}, then return the complete Peer\+Id (in HEX). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em full} & If true, will return the whole Peer\+Id. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNode_a76590e95b6dc089e697d6bc1dbf00db7}\label{classNode_a76590e95b6dc089e697d6bc1dbf00db7}} 
+\index{Node@{Node}!peer\_handler@{peer\_handler}}
+\index{peer\_handler@{peer\_handler}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{peer\_handler()}{peer\_handler()}}
+{\footnotesize\ttfamily void Node\+::peer\+\_\+handler (\begin{DoxyParamCaption}\item[{const Net\+::conn\+\_\+t \&}]{conn,  }\item[{bool}]{connected }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Useful for debugging purposes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em conn} & The connection of the peer trying to connect. \\
+\hline
+{\em connected} & Whether the peer connected or disconnected. true = connected false = disconnected \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNode_aaca6ae7e9e2568f8e97ae77245aabe54}\label{classNode_aaca6ae7e9e2568f8e97ae77245aabe54}} 
+\index{Node@{Node}!reg\_handlers@{reg\_handlers}}
+\index{reg\_handlers@{reg\_handlers}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{reg\_handlers()}{reg\_handlers()}}
+{\footnotesize\ttfamily void Node\+::reg\+\_\+handlers (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Register message handlers. 
+
+Member function to register all the message callback handlers. Needs to be called after the construction of the different instances. \mbox{\Hypertarget{classNode_a5b247d1bb5eeec1955684d365c0721a5}\label{classNode_a5b247d1bb5eeec1955684d365c0721a5}} 
+\index{Node@{Node}!set\_peers@{set\_peers}}
+\index{set\_peers@{set\_peers}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{set\_peers()}{set\_peers()}}
+{\footnotesize\ttfamily void Node\+::set\+\_\+peers (\begin{DoxyParamCaption}\item[{std\+::vector$<$ salticidae\+::\+Peer\+Id $>$}]{peers }\end{DoxyParamCaption})}
+
+
+
+Set the vector of known peers for this node. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em peers} & The vector of peers being the neighours of this peer. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNode_a8e1cb0aaeec54d246e6aeec6e23d7ca0}\label{classNode_a8e1cb0aaeec54d246e6aeec6e23d7ca0}} 
+\index{Node@{Node}!unknown\_peer\_handler@{unknown\_peer\_handler}}
+\index{unknown\_peer\_handler@{unknown\_peer\_handler}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{unknown\_peer\_handler()}{unknown\_peer\_handler()}}
+{\footnotesize\ttfamily void Node\+::unknown\+\_\+peer\+\_\+handler (\begin{DoxyParamCaption}\item[{const salticidae\+::\+Net\+Addr \&}]{addr,  }\item[{const salticidae\+::\+X509 $\ast$}]{cert }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+Handler called when an unknown peer tries to connect. The peer is unknown in that the underlying salticidae framework does not know about the peer and \mbox{\hyperlink{classNode_ad8dd86a0c0b227070082718f7f1138ff}{Node.\+peers}} does not relate to this. Since salticidae does not allow unknown peers to connect, we simply add it to the internally known peers so that it can connect without being previously known.
+
+
+\begin{DoxyParams}{Parameters}
+{\em addr} & The Net\+Addr that tries to connect. \\
+\hline
+{\em cert} & The SSL certificate of the unknown peer trying to connect. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classNode_aa6b3592c4db64fa6cee507ee6261080c}\label{classNode_aa6b3592c4db64fa6cee507ee6261080c}} 
+\index{Node@{Node}!num\_acks@{num\_acks}}
+\index{num\_acks@{num\_acks}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{num\_acks}{num\_acks}}
+{\footnotesize\ttfamily uint8\+\_\+t Node\+::num\+\_\+acks = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classNode_a9ca79e01d0318cb1a6bb0cd354ecea88}\label{classNode_a9ca79e01d0318cb1a6bb0cd354ecea88}} 
+\index{Node@{Node}!peerAddr@{peerAddr}}
+\index{peerAddr@{peerAddr}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{peerAddr}{peerAddr}}
+{\footnotesize\ttfamily salticidae\+::\+Net\+Addr Node\+::peer\+Addr}
+
+
+
+Network address of this node. 
+
+\mbox{\Hypertarget{classNode_a705bb972eea4be61e590669cf13374d9}\label{classNode_a705bb972eea4be61e590669cf13374d9}} 
+\index{Node@{Node}!peerId@{peerId}}
+\index{peerId@{peerId}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{peerId}{peerId}}
+{\footnotesize\ttfamily salticidae\+::\+Peer\+Id Node\+::peer\+Id}
+
+
+
+Peer\+Id for this node. 
+
+\mbox{\Hypertarget{classNode_aaf4a1a712d49c3b816a5d82687102bab}\label{classNode_aaf4a1a712d49c3b816a5d82687102bab}} 
+\index{Node@{Node}!peerNet@{peerNet}}
+\index{peerNet@{peerNet}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{peerNet}{peerNet}}
+{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{handler_8h_a811e8f3667f6d14ca4ee43196c4ff39e}{Net}}$>$ Node\+::peer\+Net}
+
+
+
+Networking for this node. 
+
+\mbox{\Hypertarget{classNode_ad8dd86a0c0b227070082718f7f1138ff}\label{classNode_ad8dd86a0c0b227070082718f7f1138ff}} 
+\index{Node@{Node}!peers@{peers}}
+\index{peers@{peers}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{peers}{peers}}
+{\footnotesize\ttfamily std\+::vector$<$salticidae\+::\+Peer\+Id$>$ Node\+::peers\hspace{0.3cm}{\ttfamily [private]}}
+
+Set a vector of Peer\+Id, which is used to describe other peers that are known to this one. Peers in this vector describe the nodes we should broadcast messages to. \mbox{\Hypertarget{classNode_a327383ced5f40c09b7dc9c035aa6356f}\label{classNode_a327383ced5f40c09b7dc9c035aa6356f}} 
+\index{Node@{Node}!pidmap@{pidmap}}
+\index{pidmap@{pidmap}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{pidmap}{pidmap}}
+{\footnotesize\ttfamily std\+::unordered\+\_\+map$<$salticidae\+::\+Peer\+Id, bool$>$ Node\+::pidmap\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{node_8h}{node.\+h}}\item 
+\mbox{\hyperlink{node_8cpp}{node.\+cpp}}\end{DoxyCompactItemize}

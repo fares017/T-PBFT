@@ -1,0 +1,104 @@
+\hypertarget{structMsgString}{}\doxysection{Msg\+String Struct Reference}
+\label{structMsgString}\index{MsgString@{MsgString}}
+
+
+String message.  
+
+
+
+
+{\ttfamily \#include $<$messages.\+h$>$}
+
+
+
+Collaboration diagram for Msg\+String\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=258pt]{structMsgString__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structMsgString_a7a2b2f86a80166f51108917874a0f58c}{Msg\+String}} (const std\+::string \&\mbox{\hyperlink{structMsgString_ab749e737b58ef50a7826023698c1c419}{message}})
+\begin{DoxyCompactList}\small\item\em Serialize the object from C++ datatypes to a data stream we can send over the network. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structMsgString_a406ecdaf031967fb5f4be5a1c70352b5}{Msg\+String}} (Data\+Stream \&\&s)
+\begin{DoxyCompactList}\small\item\em Serialize the object from a data stream to C++ datatypes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Data\+Stream \mbox{\hyperlink{structMsgString_a2dc6ad0bb9db72faa8a2f23750d24df2}{serialized}}
+\begin{DoxyCompactList}\small\item\em Member variable storing the serialized version of the message. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{structMsgString_ab749e737b58ef50a7826023698c1c419}{message}}
+\begin{DoxyCompactList}\small\item\em Member variable storing the actual message as a string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const \mbox{\hyperlink{config_8h_aa466ba158fd189d78e9c27b6f1f5a654}{opcode\+\_\+t}} \mbox{\hyperlink{structMsgString_ab15266976f5f5ca4926c8676d0bba542}{opcode}} = 0x2
+\begin{DoxyCompactList}\small\item\em Set unique opcode for this message. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+String message. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structMsgString_a7a2b2f86a80166f51108917874a0f58c}\label{structMsgString_a7a2b2f86a80166f51108917874a0f58c}} 
+\index{MsgString@{MsgString}!MsgString@{MsgString}}
+\index{MsgString@{MsgString}!MsgString@{MsgString}}
+\doxysubsubsection{\texorpdfstring{MsgString()}{MsgString()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Msg\+String\+::\+Msg\+String (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{message }\end{DoxyParamCaption})}
+
+
+
+Serialize the object from C++ datatypes to a data stream we can send over the network. 
+
+\mbox{\Hypertarget{structMsgString_a406ecdaf031967fb5f4be5a1c70352b5}\label{structMsgString_a406ecdaf031967fb5f4be5a1c70352b5}} 
+\index{MsgString@{MsgString}!MsgString@{MsgString}}
+\index{MsgString@{MsgString}!MsgString@{MsgString}}
+\doxysubsubsection{\texorpdfstring{MsgString()}{MsgString()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Msg\+String\+::\+Msg\+String (\begin{DoxyParamCaption}\item[{Data\+Stream \&\&}]{s }\end{DoxyParamCaption})}
+
+
+
+Serialize the object from a data stream to C++ datatypes. 
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structMsgString_ab749e737b58ef50a7826023698c1c419}\label{structMsgString_ab749e737b58ef50a7826023698c1c419}} 
+\index{MsgString@{MsgString}!message@{message}}
+\index{message@{message}!MsgString@{MsgString}}
+\doxysubsubsection{\texorpdfstring{message}{message}}
+{\footnotesize\ttfamily std\+::string Msg\+String\+::message}
+
+
+
+Member variable storing the actual message as a string. 
+
+\mbox{\Hypertarget{structMsgString_ab15266976f5f5ca4926c8676d0bba542}\label{structMsgString_ab15266976f5f5ca4926c8676d0bba542}} 
+\index{MsgString@{MsgString}!opcode@{opcode}}
+\index{opcode@{opcode}!MsgString@{MsgString}}
+\doxysubsubsection{\texorpdfstring{opcode}{opcode}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{config_8h_aa466ba158fd189d78e9c27b6f1f5a654}{opcode\+\_\+t}} Msg\+String\+::opcode = 0x2\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Set unique opcode for this message. 
+
+\mbox{\Hypertarget{structMsgString_a2dc6ad0bb9db72faa8a2f23750d24df2}\label{structMsgString_a2dc6ad0bb9db72faa8a2f23750d24df2}} 
+\index{MsgString@{MsgString}!serialized@{serialized}}
+\index{serialized@{serialized}!MsgString@{MsgString}}
+\doxysubsubsection{\texorpdfstring{serialized}{serialized}}
+{\footnotesize\ttfamily Data\+Stream Msg\+String\+::serialized}
+
+
+
+Member variable storing the serialized version of the message. 
+
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{messages_8h}{messages.\+h}}\item 
+\mbox{\hyperlink{messages_8cpp}{messages.\+cpp}}\end{DoxyCompactItemize}
