@@ -1,10 +1,10 @@
 <map id="config.h" name="config.h">
-<area shape="rect" id="node1" title="Common configuration file." alt="" coords="128,5,201,32"/>
-<area shape="rect" id="node2" href="$handler_8h.html" title="Header file for the Handler class." alt="" coords="13,229,95,256"/>
-<area shape="rect" id="node4" href="$main_8cpp.html" title="Entry point of the program." alt="" coords="162,304,245,331"/>
-<area shape="rect" id="node5" href="$messages_8h.html" title="Header file for the message types." alt="" coords="57,80,157,107"/>
-<area shape="rect" id="node7" href="$node_8h.html" title="Header file for the Node class." alt="" coords="182,155,249,181"/>
-<area shape="rect" id="node3" href="$handler_8cpp.html" title="Implementation of the Handler class and its members." alt="" coords="5,304,103,331"/>
-<area shape="rect" id="node6" href="$messages_8cpp.html" title="Implementation of the message types." alt="" coords="43,155,158,181"/>
-<area shape="rect" id="node8" href="$node_8cpp.html" title="Implementation of the Node class and its members." alt="" coords="167,229,248,256"/>
+<area shape="rect" id="node1" title="Common configuration file." alt="" coords="128,5,203,32"/>
+<area shape="rect" id="node2" href="$handler_8h.html" title="Header file for the Handler class." alt="" coords="13,229,96,256"/>
+<area shape="rect" id="node4" href="$main_8cpp.html" title="Entry point of the program." alt="" coords="163,304,245,331"/>
+<area shape="rect" id="node5" href="$messages_8h.html" title="Header file for the message types." alt="" coords="58,80,158,107"/>
+<area shape="rect" id="node6" href="$node_8h.html" title="Header file for the Node class." alt="" coords="183,155,249,181"/>
+<area shape="rect" id="node3" href="$handler_8cpp.html" title="Implementation of the Handler class and its members." alt="" coords="5,304,104,331"/>
+<area shape="rect" id="node8" href="$messages_8cpp.html" title="Implementation of the message types." alt="" coords="44,155,159,181"/>
+<area shape="rect" id="node7" href="$node_8cpp.html" title="Implementation of the Node class and its members." alt="" coords="167,229,249,256"/>
 </map>

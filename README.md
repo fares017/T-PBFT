@@ -89,3 +89,10 @@ doxygen Doxygen
 ```
 
 The generated documentation of the current commit is also in this repository under "./server/docs/html/index.html".
+
+
+## TODO
+
+I would need a judgement from you how much time students would need to implement PBFT normal case in that framework. 
+
+Ideally it should be just building the protocol state machine and the framework does the rest.
