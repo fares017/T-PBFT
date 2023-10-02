@@ -1,8 +1,8 @@
 CXX = g++
 CXXFLAGS = -I. -Wall# -std=c++20
 
-LIBS =-lsalticidae -lssl -lcrypto -luv
-
+# LIBS =-lsalticidae -lssl -lcrypto -luv
+LIBS =-lsalticidae -lssl -lcrypto -luv -lpthread
 all: executable
 
 debug: CXXFLAGS += -g -DDEBUG
