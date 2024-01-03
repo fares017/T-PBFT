@@ -9,7 +9,8 @@
 struct TrustInfo {
     std::string nodeId;  // ID of the current node
     salticidae::PeerId peerId;  // ID of the peer node
-    uint64_t localTrust;  // Local trust value
+    uint64_t Sat;  // statisfactory messages
+    uint64_t Unsat;  // Unsatisfactory messages
 };
 
 // Custom hash function for std::pair<std::string, salticidae::PeerId>

@@ -69,13 +69,14 @@ void Node::prepare_handler(MsgPrepare &&msg, const Net::conn_t &conn) {
 
         if (it != trustMap.end()) {
             // Pair already exists, update local trust.
-            it->second.localTrust++;
+            it->second.Sat++;
         } else {
             // Pair doesn't exist, create a new TrustInfo.
             TrustInfo trustInfo;
             trustInfo.nodeId = get_id();  // Keep nodeId as a string.
             trustInfo.peerId = conn->get_peer_id();
-            trustInfo.localTrust = 1;
+            trustInfo.Sat = 1;
+            trustInfo.Unsat = 0;
 
             // Insert the new pair into the map.
             trustMap[nodePair] = trustInfo;
@@ -94,10 +95,14 @@ void Node::prepare_handler(MsgPrepare &&msg, const Net::conn_t &conn) {
             TrustInfo trustInfo;
             trustInfo.nodeId = get_id();  // Keep nodeId as a string.
             trustInfo.peerId = conn->get_peer_id();
-            trustInfo.localTrust = 0;  // Local trust remains unchanged for invalid messages.
+            trustInfo.Sat = 0;  // Local trust remains unchanged for invalid messages.
+            trustInfo.Unsat = 1; 
 
             // Insert the new pair into the map.
             trustMap[nodePair] = trustInfo;
+        }else{
+             // Pair already exists, update local trust.
+            it->second.Unsat++;
         }
 
         // Additional actions for invalid messages, if needed.
@@ -122,7 +127,7 @@ void Node::precommit_handler(MsgPrecommit &&msg, const Net::conn_t &conn){
             const auto &value = entry.second;
 
             cout << "Node ID: " << key.first << ", Peer ID: " << key.second.to_hex()
-                 << ", Local Trust: " << value.localTrust << "\n";
+                 << ", Number of Satisfactory transactions: " << value.Sat << ", Number of Unsatisfactory transactions: " << value.Unsat  << "\n";
         }
     } 
 }
