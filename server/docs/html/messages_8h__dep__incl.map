@@ -1,9 +1,9 @@
 <map id="messages.h" name="messages.h">
-<area shape="rect" id="node1" title="Header file for the message types." alt="" coords="133,5,233,32"/>
-<area shape="rect" id="node2" href="$handler_8h.html" title="Header file for the Handler class." alt="" coords="71,155,153,181"/>
-<area shape="rect" id="node5" href="$node_8h.html" title="Header file for the Node class." alt="" coords="149,80,216,107"/>
-<area shape="rect" id="node7" href="$messages_8cpp.html" title="Implementation of the message types." alt="" coords="240,80,355,107"/>
-<area shape="rect" id="node3" href="$handler_8cpp.html" title="Implementation of the Handler class and its members." alt="" coords="5,229,104,256"/>
-<area shape="rect" id="node4" href="$main_8cpp.html" title="Entry point of the program." alt="" coords="128,229,211,256"/>
-<area shape="rect" id="node6" href="$node_8cpp.html" title="Implementation of the Node class and its members." alt="" coords="178,155,259,181"/>
+<area shape="rect" id="node1" title="Header file for the message types." alt="" coords="104,5,204,32"/>
+<area shape="rect" id="node2" href="$handler_8h.html" title="Header file for the Handler class." alt="" coords="70,155,153,181"/>
+<area shape="rect" id="node5" href="$messages_8cpp.html" title="Implementation of the message types." alt="" coords="97,80,211,107"/>
+<area shape="rect" id="node6" href="$node_8h.html" title="Header file for the Node class." alt="" coords="235,80,302,107"/>
+<area shape="rect" id="node3" href="$handler_8cpp.html" title="Implementation of the Handler class and its members." alt="" coords="5,229,103,256"/>
+<area shape="rect" id="node4" href="$main_8cpp.html" title="Entry point of the program." alt="" coords="127,229,210,256"/>
+<area shape="rect" id="node7" href="$node_8cpp.html" title="Implementation of the Node class and its members." alt="" coords="228,155,309,181"/>
 </map>

@@ -3,8 +3,9 @@
 
 #include <string>
 #include <iostream>
-
+#include <list>
 #include <salticidae/network.h>
+#include <functional>
 
 #include "config.h"
 #include "messages.h"
@@ -94,6 +95,14 @@ class Node {
         uint8_t num_acks = 0;
 
         std::unordered_map<salticidae::PeerId, bool> pidmap;
+        int nodes = NUM_NODES; 
+
+        // Member variables to store state accross callbacks.
+        salticidae::PeerId client_id;
+        int a = 0;
+        int b = 0;
+        std::list<MsgPrecommit> prepared_message;
+
 
         /**
          * A handler is called when its specific message type gets received.
@@ -143,6 +152,9 @@ class Node {
          * @brief Handler for when a MsgString message gets received.
         */
         void string_handler(MsgString &&msg, const Net::conn_t &conn);
+        void prepare_handler(MsgPrepare &&msg, const Net::conn_t &conn);
+        void precommit_handler(MsgPrecommit &&msg, const Net::conn_t &conn);
+        void preprepare_handler(MsgPreprepare &&msg, const Net::conn_t &conn);
         /**
          * @ingroup MessageHandlerGroup
          * 
@@ -164,7 +176,37 @@ class Node {
          * @brief Handler for when a MsgAck message gets received.
         */
         void ack_handler(MsgAck &&msg, const Net::conn_t &conn);
+        /**
+         * @ingroup MessageHandlerGroup
+         * 
+         * @brief Handler for when a request message gets received.
+        */
+
+
+       /*
+            Changes here
+       */
+        void request_handler(MsgRequest &&msg, const Net::conn_t &conn);
+        /**
+         * @ingroup MessageHandlerGroup
+         * 
+         * @brief Handler for when a forward message gets received.
+        */
+        void forward_handler(MsgForward &&msg, const Net::conn_t &conn);
+        /**
+         * @ingroup MessageHandlerGroup
+         * 
+         * @brief Handler for when a request message gets received.
+        */
+        void result_handler(MsgResult &&msg, const Net::conn_t &conn);
+        /**
+         * @ingroup MessageHandlerGroup
+         * 
+         * @brief Handler for when a request message gets received.
+        */
+        void reply_handler(MsgReply &&msg, const Net::conn_t &conn);
         /** @} */
+
 
         /**
          * %Handler called when an unknown peer tries to connect. The peer is unknown in that the underlying

@@ -17,7 +17,15 @@ struct \mbox{\hyperlink{structMsgString}{Msg\+String}}
 struct \mbox{\hyperlink{structMsgVote}{Msg\+Vote}}
 \begin{DoxyCompactList}\small\item\em Vote message. \end{DoxyCompactList}\item 
 struct \mbox{\hyperlink{structMsgOp}{Msg\+Op}}
-\begin{DoxyCompactList}\small\item\em Operation message. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Operation message. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structMsgRequest}{Msg\+Request}}
+\begin{DoxyCompactList}\small\item\em Request message. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structMsgForward}{Msg\+Forward}}
+\begin{DoxyCompactList}\small\item\em Forward message. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structMsgResult}{Msg\+Result}}
+\begin{DoxyCompactList}\small\item\em Result message. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structMsgReply}{Msg\+Reply}}
+\begin{DoxyCompactList}\small\item\em Reply message. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -32,7 +40,7 @@ Each message has an opcode component that has to be unique, $<$ uint8\+\_\+t and
 Both overloads have to be implemented for each message type.
 
 \begin{DoxyNote}{Note}
-The messages that are implemented here are used as a reference to show how it could be done and do not have to be used for the implementation of a B\+FT protocol.
+The messages that are implemented here are used as a reference to show how it could be done and do not have to be used for the implementation of a BFT protocol.
 \end{DoxyNote}
 Example code to be put in the \mbox{\hyperlink{messages_8h}{messages.\+h}} file. 
 \begin{DoxyCode}{0}
@@ -47,6 +55,7 @@ Example code to be put in the \mbox{\hyperlink{messages_8h}{messages.\+h}} file.
 \DoxyCodeLine{     \textcolor{comment}{// Constructor for receiving a message i.e. de-\/serializing the message to the object and its components.}}
 \DoxyCodeLine{     MsgExample(DataStream \&\&s);}
 \DoxyCodeLine{\};}
+
 \end{DoxyCode}
 
 
@@ -72,5 +81,6 @@ The \mbox{\hyperlink{messages_8cpp}{messages.\+cpp}} file implements the actual 
 \DoxyCodeLine{     \textcolor{comment}{// Since the integer size is known, we can simply extract our number.}}
 \DoxyCodeLine{     s >> someNumber;}
 \DoxyCodeLine{\}}
+
 \end{DoxyCode}
  

@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['sequence_47',['sequence',['../structMsgOp.html#adcc0e54d1715ba8a064f114a4ef511f6',1,'MsgOp']]],
-  ['serialized_48',['serialized',['../structMsgInvalid.html#aa3bcfdaa26092fcc923143c65b88a844',1,'MsgInvalid::serialized()'],['../structMsgAck.html#a549a8bbd7bdbe250df56535a2beab709',1,'MsgAck::serialized()'],['../structMsgString.html#a2dc6ad0bb9db72faa8a2f23750d24df2',1,'MsgString::serialized()'],['../structMsgVote.html#aab59c49906608ff1e264e929ca2a359e',1,'MsgVote::serialized()'],['../structMsgOp.html#a3e60200c7cec7f3bb60c2ec2cddaeb27',1,'MsgOp::serialized()']]],
-  ['set_5fpeers_49',['set_peers',['../classNode.html#a5b247d1bb5eeec1955684d365c0721a5',1,'Node']]],
-  ['string_5fhandler_50',['string_handler',['../group__MessageHandlerGroup.html#ga53665f135e7bc71d53dd1e645abc1a3b',1,'Node']]]
+  ['p2p_20message_20serialization_20framework_50',['P2P Message Serialization Framework',['../md_README.html',1,'']]],
+  ['peer_5fhandler_51',['peer_handler',['../classNode.html#a76590e95b6dc089e697d6bc1dbf00db7',1,'Node']]],
+  ['peeraddr_52',['peerAddr',['../classNode.html#a9ca79e01d0318cb1a6bb0cd354ecea88',1,'Node']]],
+  ['peerid_53',['peerId',['../classNode.html#a705bb972eea4be61e590669cf13374d9',1,'Node']]],
+  ['peernet_54',['peerNet',['../classNode.html#aaf4a1a712d49c3b816a5d82687102bab',1,'Node']]],
+  ['peers_55',['peers',['../classNode.html#ad8dd86a0c0b227070082718f7f1138ff',1,'Node']]],
+  ['pidmap_56',['pidmap',['../classNode.html#a327383ced5f40c09b7dc9c035aa6356f',1,'Node']]]
 ];

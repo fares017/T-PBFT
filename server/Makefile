@@ -8,8 +8,10 @@ all: executable
 debug: CXXFLAGS += -g -DDEBUG
 debug: executable
 
-executable: main.o handler.o messages.o node.o
-	$(CXX) $(CXXFLAGS) -o main main.o config.h messages.o handler.o node.o $(LIBS)
+
+
+executable: main.o handler.o messages.o node.o TrustManager.o
+	$(CXX) $(CXXFLAGS) -o main main.o config.h messages.o handler.o node.o TrustManager.o $(LIBS)
 
 main.o: main.cpp config.h handler.h
 	$(CXX) $(CXXFLAGS) -c main.cpp
@@ -22,6 +24,12 @@ node.o: node.cpp node.h config.h
 
 messages.o: messages.cpp messages.h config.h
 	$(CXX) $(CXXFLAGS) -c messages.cpp
+
+trust_manager.o: TrustManager.cpp TrustManager.h 
+	$(CXX) $(CXXFLAGS) -c TrustManager.cpp
+
+
+
 
 .PHONY: clean
 clean:

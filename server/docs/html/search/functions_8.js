@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['peer_5fhandler_82',['peer_handler',['../classNode.html#a76590e95b6dc089e697d6bc1dbf00db7',1,'Node']]]
+  ['operation_5fhandler_106',['operation_handler',['../group__MessageHandlerGroup.html#gab5ec32f0537e6c913d4fb96a7188bfbc',1,'Node']]]
 ];

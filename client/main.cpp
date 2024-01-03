@@ -15,30 +15,44 @@ using std::cout;
 
 std::unique_ptr<Net> net;
 
-// void message(salticidae::PeerId pid) {
-void message(salticidae::PeerId pid1, salticidae::PeerId pid2) {
+void message(salticidae::PeerId pid) {
     usleep(3000000); // in microseconds
     cout << "Sending message!\n";
-    // net->send_msg(MsgString("Heyyy"), pid1);
-    // net->send_msg(MsgVote(1, "Hello There!"), pid1);
-    net->send_msg(MsgOp(1, "A"), pid1);
-    // net->send_msg(MsgString("message for other node here!"), pid2);
 
-    // usleep(2000000); // in microseconds
-    // exit(0);
+    // Send message request with a = 25 and b = 75
+    //net->send_msg(MsgRequest(25, 75), pid);
+    net->send_msg(MsgPreprepare("at"), pid);
+    //net->send_msg(MsgString("attackerrelease"), pid);
+    //usleep(2000000); // in microseconds
+    //exit(0);
+}
+
+// void ack_handler(MsgAck &&msg, const Net::conn_t &conn) {
+//     cout << "Got ACK:\n";
+//     cout << "\tFrom " << conn->get_peer_id().to_hex() << "\n";
+// }
+
+// void string_handler(MsgString &&msg, const Net::conn_t &conn) {
+//     cout << "Got message:\n";
+//     cout << "\tMessage: " << msg.message << "\n";
+//     cout << "\tFrom " << conn->get_peer_id().to_hex() << "\n";
+
+//     conn->get_net()->send_msg(MsgAck(), salticidae::static_pointer_cast<Net::Conn>(conn));
+// }
+
+
+
+// Handler to display message that we get from the server.
+void reply_handler(MsgReply &&msg, const Net::conn_t &conn) {
+    cout << "Got reply from server:\n";
+    cout << "\tFrom " << conn->get_peer_id().to_hex().substr(0, 10) << "\n";
+    cout << "\tc: " << msg.c << "\n";
+    cout << "\tis faulty?: " << msg.fault << "\n";
 }
 
 void ack_handler(MsgAck &&msg, const Net::conn_t &conn) {
-    cout << "Got ACK:\n";
-    cout << "\tFrom " << conn->get_peer_id().to_hex() << "\n";
-}
-
-void string_handler(MsgString &&msg, const Net::conn_t &conn) {
-    cout << "Got message:\n";
-    cout << "\tMessage: " << msg.message << "\n";
-    cout << "\tFrom " << conn->get_peer_id().to_hex() << "\n";
-
-    conn->get_net()->send_msg(MsgAck(), salticidae::static_pointer_cast<Net::Conn>(conn));
+     cout << "Got ACK:\n";
+     cout << "\tFrom " << conn->get_peer_id().to_hex() << "\n";
 }
 
 salticidae::PeerId connect_peer(std::string address_string) {
@@ -63,7 +77,7 @@ int main() {
 
     // Address of "managing" node.
     std::string address_string = ADDRESS_STRING + ":" + std::to_string(ADDRESS_PORT);
-    std::string address_string_1 = ADDRESS_STRING + ":" + std::to_string(ADDRESS_PORT + 1);
+    // std::string address_string_1 = ADDRESS_STRING + ":" + std::to_string(ADDRESS_PORT + 1);
 
 
     salticidae::NetAddr address(address_string);
@@ -73,8 +87,13 @@ int main() {
     net->conn_peer(pid);
 
     // Register handlers.
+    //net->reg_handler(ack_handler);
+    //net->reg_handler(string_handler);
+
+
+    // Register the handler for handling reply type messages.
+    net->reg_handler(reply_handler);
     net->reg_handler(ack_handler);
-    net->reg_handler(string_handler);
 
 
     // Address of this "client".
@@ -86,9 +105,8 @@ int main() {
     net->listen(my_addr);
 
     salticidae::PeerId pid1 = connect_peer(address_string);
-    salticidae::PeerId pid2 = connect_peer(address_string_1);
 
-    std::thread thread_obj(message, pid1, pid2);
+    std::thread thread_obj(message, pid1);
 
     ec.dispatch();
     return 0;

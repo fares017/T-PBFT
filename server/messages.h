@@ -2,7 +2,7 @@
 #define FRAMEWORK_MESSAGES_H
 
 #include <string>
-
+#include<iostream>
 #include <salticidae/msg.h>
 
 #include "config.h"
@@ -170,6 +170,140 @@ struct MsgOp {
     //! Serialize the object from a data stream to C++ datatypes.
     MsgOp(DataStream &&s);
 };
-/** @} */
 
+
+/*
+    Newly added
+*/
+
+/**
+ * @ingroup MessageTypes
+ * 
+ * @brief Request message.
+*/
+struct MsgRequest {
+    //! Set unique opcode for this message.
+    static const opcode_t opcode = 0x5;
+    //! Member variable storing the serialized version of the message.
+    DataStream serialized;
+
+    //! Store our two numbers
+    int a;
+    int b;
+
+    //! Serialize the object from C++ datatypes to a data stream we can send over the network.
+    MsgRequest(const int &a, const int &b);
+    //! Serialize the object from a data stream to C++ datatypes.
+    MsgRequest(DataStream &&s);
+};
+
+/**
+ * @ingroup MessageTypes
+ * 
+ * @brief Forward message.
+*/
+struct MsgForward {
+    //! Set unique opcode for this message.
+    static const opcode_t opcode = 0x6;
+    //! Member variable storing the serialized version of the message.
+    DataStream serialized;
+
+    //! Store our two numbers
+    int a;
+    int b;
+
+    //! Serialize the object from C++ datatypes to a data stream we can send over the network.
+    MsgForward(const int &a, const int &b);
+    //! Serialize the object from a data stream to C++ datatypes.
+    MsgForward(DataStream &&s);
+};
+
+/**
+ * @ingroup MessageTypes
+ * 
+ * @brief Result message.
+*/
+struct MsgResult {
+    //! Set unique opcode for this message.
+    static const opcode_t opcode = 0x7;
+    //! Member variable storing the serialized version of the message.
+    DataStream serialized;
+
+    //! Result number
+    int c;
+
+    //! Serialize the object from C++ datatypes to a data stream we can send over the network.
+    MsgResult(const int &c);
+    //! Serialize the object from a data stream to C++ datatypes.
+    MsgResult(DataStream &&s);
+};
+
+/**
+ * @ingroup MessageTypes
+ * 
+ * @brief Reply message.
+*/
+struct MsgReply {
+    //! Set unique opcode for this message.
+    static const opcode_t opcode = 0x8;
+    //! Member variable storing the serialized version of the message.
+    DataStream serialized;
+
+    //! Result number
+    int c;
+    //! Is the second server faulty?
+    bool fault;
+
+    //! Serialize the object from C++ datatypes to a data stream we can send over the network.
+    MsgReply(const int &c, const bool &fault);
+    //! Serialize the object from a data stream to C++ datatypes.
+    MsgReply(DataStream &&s);
+};
+/** @} */
+//Msg Prepare
+struct MsgPrepare {
+    static const opcode_t opcode = 0x9;
+    DataStream serialized;
+    //Order number
+    uint order;
+    //message
+    std::string message;
+    //hash
+    int msghash;
+
+    MsgPrepare(const uint &order, const std::string &message, const int &msghash);
+    MsgPrepare(DataStream &&s);
+
+};
+/** @} */
+//Msg Precommit
+struct MsgPrecommit {
+    static const opcode_t opcode = 0x10;
+    DataStream serialized;
+    //Order number
+    uint order;
+    //message
+    std::string message;
+    //hash
+    int msghash;
+
+    MsgPrecommit(const uint &order, const std::string &message, const int &msghash);
+    MsgPrecommit(DataStream &&s);
+
+};
+/** @} */
+//Msg Prepare
+struct MsgPreprepare{
+    //! Set unique opcode for this message.
+    static const opcode_t opcode = 0x11;
+    //! Member variable storing the serialized version of the message.
+    DataStream serialized;
+    //! Member variable storing the actual message as a string.
+    std::string message;
+
+    //! Serialize the object from C++ datatypes to a data stream we can send over the network.
+    MsgPreprepare(const std::string &message);
+    //! Serialize the object from a data stream to C++ datatypes.
+    MsgPreprepare(DataStream &&s);
+};
 #endif

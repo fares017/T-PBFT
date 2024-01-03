@@ -1,4 +1,7 @@
 #include "node.h"
+#include "TrustManager.h"  // Include the TrustManager header
+#include <string>
+
 
 /** @file node.cpp
  * 
@@ -24,10 +27,18 @@ void Node::reg_handlers() {
     peerNet->reg_handler(salticidae::generic_bind(&Node::ack_handler, this, _1, _2));
 
     peerNet->reg_handler(salticidae::generic_bind(&Node::operation_handler, this, _1, _2));
+    peerNet->reg_handler(salticidae::generic_bind(&Node::prepare_handler, this, _1, _2));
+    peerNet->reg_handler(salticidae::generic_bind(&Node::precommit_handler, this, _1, _2));
+    peerNet->reg_handler(salticidae::generic_bind(&Node::preprepare_handler, this, _1, _2));
+    // Register handlers for the different message types that we have now.
+    peerNet->reg_handler(salticidae::generic_bind(&Node::request_handler, this, _1, _2));
+    peerNet->reg_handler(salticidae::generic_bind(&Node::forward_handler, this, _1, _2));
+    peerNet->reg_handler(salticidae::generic_bind(&Node::result_handler, this, _1, _2));
+    // peerNet->reg_handler(salticidae::generic_bind(&Node::reply_handler, this, _1, _2));
 
     peerNet->reg_unknown_peer_handler(salticidae::generic_bind(&Node::unknown_peer_handler, this, _1, _2));
 
-    // peerNet->reg_conn_handler(salticidae::generic_bind(&Node::conn_handler, this, _1, _2));
+    peerNet->reg_conn_handler(salticidae::generic_bind(&Node::conn_handler, this, _1, _2));
     // peerNet->reg_error_handler(salticidae::generic_bind(&Node::error_handler, this, _1, _2, _3));
     // peerNet->reg_peer_handler(salticidae::generic_bind(&Node::peer_handler, this, _1, _2));
 }
@@ -36,10 +47,96 @@ void Node::string_handler(MsgString &&msg, const Net::conn_t &conn) {
     cout << "Node " << get_id() << " got message:\n";
     cout << "\tMessage: " << msg.message << "\n";
     cout << "\tFrom " << conn->get_peer_id().to_hex() << "\n";
-
+    std::hash<std::string> msghash;
+    int hashvalue = msghash(msg.message);
+    uint order = 1;
+    peerNet->multicast_msg(MsgPrepare(order, msg.message, hashvalue), peers);
     peerNet->send_msg(MsgAck(), conn);
 }
 
+void Node::prepare_handler(MsgPrepare &&msg, const Net::conn_t &conn) {
+    cout << "Node " << get_id() << " got pre-prepare message from " << conn->get_peer_id().to_hex() << "\n";
+
+    std::hash<std::string> messagehash;
+    int hashvalue = messagehash(msg.message);
+
+    // Create a pair for the trustMap key.
+    std::pair<std::string, salticidae::PeerId> nodePair(get_id(), conn->get_peer_id());
+
+    if (hashvalue == msg.msghash) {
+        // Message is valid, update or create TrustInfo in the global map.
+        auto it = trustMap.find(nodePair);
+
+        if (it != trustMap.end()) {
+            // Pair already exists, update local trust.
+            it->second.localTrust++;
+        } else {
+            // Pair doesn't exist, create a new TrustInfo.
+            TrustInfo trustInfo;
+            trustInfo.nodeId = get_id();  // Keep nodeId as a string.
+            trustInfo.peerId = conn->get_peer_id();
+            trustInfo.localTrust = 1;
+
+            // Insert the new pair into the map.
+            trustMap[nodePair] = trustInfo;
+        }
+
+        // Continue processing the message or perform additional actions.
+
+        // Broadcast or multicast as needed.
+        peerNet->multicast_msg(MsgPrecommit(msg.order, msg.message, msg.msghash), peers);
+    } else {
+        // Message is invalid, store information without increasing local trust.
+        auto it = trustMap.find(nodePair);
+
+        if (it == trustMap.end()) {
+            // Pair doesn't exist, create a new TrustInfo without increasing local trust.
+            TrustInfo trustInfo;
+            trustInfo.nodeId = get_id();  // Keep nodeId as a string.
+            trustInfo.peerId = conn->get_peer_id();
+            trustInfo.localTrust = 0;  // Local trust remains unchanged for invalid messages.
+
+            // Insert the new pair into the map.
+            trustMap[nodePair] = trustInfo;
+        }
+
+        // Additional actions for invalid messages, if needed.
+    }
+}
+
+
+void Node::precommit_handler(MsgPrecommit &&msg, const Net::conn_t &conn){
+    cout << "Node " << get_id() << " got prepare message from " << conn->get_peer_id().to_hex()<<"\n";
+    prepared_message.push_back(msg);
+    unsigned long fault_tolerance = ((2*nodes) - 2) / 3;
+    if(prepared_message.size() > fault_tolerance){
+        for(const auto &pid : peers) {
+            cout<<"Sending message "<<pid.to_hex()<<"\n";
+        }
+        //prepared_message.remove(msg);
+
+                // Print the trustMap
+        cout << "TrustMap contents:\n";
+        for (const auto &entry : trustMap) {
+            const auto &key = entry.first;
+            const auto &value = entry.second;
+
+            cout << "Node ID: " << key.first << ", Peer ID: " << key.second.to_hex()
+                 << ", Local Trust: " << value.localTrust << "\n";
+        }
+    } 
+}
+
+void Node::preprepare_handler(MsgPreprepare &&msg, const Net::conn_t &conn) {
+    cout << "Primary Node " << get_id() << " got message:\n";
+    cout << "\tMessage: " << msg.message << "\n";
+    cout << "\tFrom " << conn->get_peer_id().to_hex() << "\n";
+    std::hash<std::string> msghash;
+    int hashvalue = msghash(msg.message);
+    uint order = 1;
+    peerNet->multicast_msg(MsgPrepare(order, msg.message, hashvalue), peers);
+    peerNet->send_msg(MsgAck(), conn);
+}
 void Node::vote_handler(MsgVote &&msg, const Net::conn_t &conn) {
     cout << "\nNode " << get_id() << " got message:\n";
     cout << "\tMessage ID: " << std::to_string(msg.id) << "\n";
@@ -103,6 +200,93 @@ void Node::operation_handler(MsgOp &&msg, const Net::conn_t &conn) {
 
     peerNet->multicast_msg(MsgVote(msg.sequence, msg.operation), peers);
 }
+
+
+/*
+    Changes here
+*/
+void Node::request_handler(MsgRequest &&msg, const Net::conn_t &conn) {
+    // Display message content to the user.
+    cout << "Node " << get_id() << " got request message: \n";
+    cout << "\tFrom " << conn->get_peer_id().to_hex().substr(0, 10) << "\n";
+    cout << "\tWith a = " << msg.a << "\n";
+    cout << "\tAnd  b = " << msg.b << "\n";
+
+    // Set the id from the client for this node or else it is lost.
+    client_id = conn->get_peer_id();
+
+    // Extract integers from the message and fill the internal state with them.
+    a = msg.a;
+    b = msg.b;
+
+    // Since there is only one other peer it is index 0.
+    // Send then the Forward message to the second server.
+    peerNet->send_msg(MsgForward(msg.a, msg.b), peers[0]);
+}
+
+void Node::forward_handler(MsgForward &&msg, const Net::conn_t &conn) {
+    // Extract message contents, this time as local variables.
+    int a = msg.a;
+    int b = msg.b;
+
+    // Let the user know of the message contents.
+    cout << "Node " << get_id() << " got forward message: \n";
+    cout << "\tFrom " << conn->get_peer_id().to_hex().substr(0, 10) << "\n";
+    cout << "\tWith a = " << a << "\n";
+    cout << "\tAnd  b = " << b << "\n";
+
+    // Compute the resulting c to send back to the first server.
+    int c = a + b;
+
+    // Send we send back to the first server, from where we got it from, we can use the conn argument.
+    cout << "\t-> Node " << get_id() << " answering to " << conn->get_peer_id().to_hex().substr(0, 10) << "\n";
+    cout << "\t\tWith c = " << c << "\n";
+
+    // Send the Result message to the first server.
+    peerNet->send_msg(MsgResult(c), conn);
+}
+
+void Node::result_handler(MsgResult &&msg, const Net::conn_t &conn) {
+    // Extract received c.
+    int c = msg.c;
+    cout << "Node " << get_id() << " got result message: \n";
+    cout << "\tFrom " << conn->get_peer_id().to_hex().substr(0, 10) << "\n";
+    cout << "\tWith c = " << c << "\n";
+
+    // Get the client that connected via the client_id member variable.
+    salticidae::PeerId client = client_id;
+    // Set the client_id member variable to itself to signify that no client recently connect.
+    // aka reset the internal state.
+    client_id = peerId;
+
+    cout << "\tChecking c...\n";
+
+    // Compute c from the member variable that we stored at the very beginning.
+    int check_c = a + b;
+    if (c == check_c) {
+        // Reset a and b member variables.
+        a = 0;
+        b = 0;
+
+
+        cout << "\tc matches! Sending good reply to " << client.to_hex().substr(0, 10) << "\n";
+        // The c is correctly computed so we send it to the client that requested the computation.
+        peerNet->send_msg(MsgReply(c, false), client);
+    } else {
+        cout << "\tc DOES NOT match! Sending failure reply to " << client.to_hex().substr(0, 10) << "\n";
+        peerNet->send_msg(MsgReply(0, true), client);
+    }
+}
+
+
+// We technically do not need this since only the client should receive reply messages.
+void Node::reply_handler(MsgReply &&msg, const Net::conn_t &conn) {
+    cout << "Node " << get_id() << " got reply message: \n";
+    cout << "\tFrom " << conn->get_peer_id().to_hex().substr(0, 10) << "\n";
+    cout << "\tWith c = " << msg.c << "\n";
+    cout << "\tAnd  fault = " << msg.fault << "\n";
+}
+
 
 void Node::ack_handler(MsgAck &&msg, const Net::conn_t &conn) {
     cout << "Node " << get_id() << " got ACK:\n";

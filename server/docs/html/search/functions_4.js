@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['handler_73',['Handler',['../classHandler.html#a530b1438a09d17d0f77c2af197b778d5',1,'Handler']]]
+  ['get_5fid_92',['get_id',['../classNode.html#a03d5e7540a5c7ee5b1020b047d11dd07',1,'Node::get_id()'],['../classNode.html#a0d32c76985fe5a3e0c802d4e027ce416',1,'Node::get_id(bool full)']]],
+  ['get_5fnodes_93',['get_nodes',['../classHandler.html#a1e1ff7c01b34b9b0377cfe8c23ae3f70',1,'Handler']]]
 ];

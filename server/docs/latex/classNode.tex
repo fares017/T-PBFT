@@ -30,9 +30,9 @@ void \mbox{\hyperlink{classNode_a5b247d1bb5eeec1955684d365c0721a5}{set\+\_\+peer
 void \mbox{\hyperlink{classNode_aaca6ae7e9e2568f8e97ae77245aabe54}{reg\+\_\+handlers}} ()
 \begin{DoxyCompactList}\small\item\em Register message handlers. \end{DoxyCompactList}\item 
 std\+::string \mbox{\hyperlink{classNode_a03d5e7540a5c7ee5b1020b047d11dd07}{get\+\_\+id}} ()
-\begin{DoxyCompactList}\small\item\em Return the trimmed Peer\+Id (in H\+EX) as an ID for this node. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Return the trimmed Peer\+Id (in HEX) as an ID for this node. \end{DoxyCompactList}\item 
 std\+::string \mbox{\hyperlink{classNode_a0d32c76985fe5a3e0c802d4e027ce416}{get\+\_\+id}} (bool full)
-\begin{DoxyCompactList}\small\item\em If \char`\"{}full=true\char`\"{}, then return the complete Peer\+Id (in H\+EX). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em If \char`\"{}full=true\char`\"{}, then return the complete Peer\+Id (in HEX). \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -53,6 +53,14 @@ void \mbox{\hyperlink{group__MessageHandlerGroup_gab5ec32f0537e6c913d4fb96a7188b
 \begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgOp}{Msg\+Op}} message gets received. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{group__MessageHandlerGroup_gae7fd57d493bd55c750fec06e9066a99d}{ack\+\_\+handler}} (\mbox{\hyperlink{structMsgAck}{Msg\+Ack}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
 \begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgAck}{Msg\+Ack}} message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_gae5a6e892b537d523c2519c0a96d3484d}{request\+\_\+handler}} (\mbox{\hyperlink{structMsgRequest}{Msg\+Request}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a request message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_gae22830e01f49a04b6d9f6ebedd65aec0}{forward\+\_\+handler}} (\mbox{\hyperlink{structMsgForward}{Msg\+Forward}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a forward message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_ga8add83fec79b4a9953e444e0a8c79cb2}{result\+\_\+handler}} (\mbox{\hyperlink{structMsgResult}{Msg\+Result}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a request message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_ga6993f33a597c7f98e4b7e24662ee94af}{reply\+\_\+handler}} (\mbox{\hyperlink{structMsgReply}{Msg\+Reply}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a request message gets received. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classNode_a8e1cb0aaeec54d246e6aeec6e23d7ca0}{unknown\+\_\+peer\+\_\+handler}} (const salticidae\+::\+Net\+Addr \&addr, const salticidae\+::\+X509 $\ast$cert)
 \item 
 void \mbox{\hyperlink{classNode_a7519d229462b06026aaea36b3308f9fc}{error\+\_\+handler}} (std\+::\+\_\+\+\_\+exception\+\_\+ptr\+::exception\+\_\+ptr exception\+\_\+ptr, bool idk, int huh)
@@ -69,6 +77,12 @@ std\+::vector$<$ salticidae\+::\+Peer\+Id $>$ \mbox{\hyperlink{classNode_ad8dd86
 uint8\+\_\+t \mbox{\hyperlink{classNode_aa6b3592c4db64fa6cee507ee6261080c}{num\+\_\+acks}} = 0
 \item 
 std\+::unordered\+\_\+map$<$ salticidae\+::\+Peer\+Id, bool $>$ \mbox{\hyperlink{classNode_a327383ced5f40c09b7dc9c035aa6356f}{pidmap}}
+\item 
+salticidae\+::\+Peer\+Id \mbox{\hyperlink{classNode_a4076dc36b5e2ab15fc0ac47fd561d99c}{client\+\_\+id}}
+\item 
+int \mbox{\hyperlink{classNode_a2fdf3febffa37539c09d0a282525033a}{a}} = 0
+\item 
+int \mbox{\hyperlink{classNode_a01735f57d6c4368eab28a1ec6f267944}{b}} = 0
 \end{DoxyCompactItemize}
 
 
@@ -160,7 +174,7 @@ Useful for debugging purposes.
 
 
 
-Return the trimmed Peer\+Id (in H\+EX) as an ID for this node. 
+Return the trimmed Peer\+Id (in HEX) as an ID for this node. 
 
 \mbox{\Hypertarget{classNode_a0d32c76985fe5a3e0c802d4e027ce416}\label{classNode_a0d32c76985fe5a3e0c802d4e027ce416}} 
 \index{Node@{Node}!get\_id@{get\_id}}
@@ -170,7 +184,7 @@ Return the trimmed Peer\+Id (in H\+EX) as an ID for this node.
 
 
 
-If \char`\"{}full=true\char`\"{}, then return the complete Peer\+Id (in H\+EX). 
+If \char`\"{}full=true\char`\"{}, then return the complete Peer\+Id (in HEX). 
 
 
 \begin{DoxyParams}{Parameters}
@@ -231,12 +245,30 @@ Handler called when an unknown peer tries to connect. The peer is unknown in tha
 \begin{DoxyParams}{Parameters}
 {\em addr} & The Net\+Addr that tries to connect. \\
 \hline
-{\em cert} & The S\+SL certificate of the unknown peer trying to connect. \\
+{\em cert} & The SSL certificate of the unknown peer trying to connect. \\
 \hline
 \end{DoxyParams}
 
 
 \doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classNode_a2fdf3febffa37539c09d0a282525033a}\label{classNode_a2fdf3febffa37539c09d0a282525033a}} 
+\index{Node@{Node}!a@{a}}
+\index{a@{a}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{a}{a}}
+{\footnotesize\ttfamily int Node\+::a = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classNode_a01735f57d6c4368eab28a1ec6f267944}\label{classNode_a01735f57d6c4368eab28a1ec6f267944}} 
+\index{Node@{Node}!b@{b}}
+\index{b@{b}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{b}{b}}
+{\footnotesize\ttfamily int Node\+::b = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classNode_a4076dc36b5e2ab15fc0ac47fd561d99c}\label{classNode_a4076dc36b5e2ab15fc0ac47fd561d99c}} 
+\index{Node@{Node}!client\_id@{client\_id}}
+\index{client\_id@{client\_id}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{client\_id}{client\_id}}
+{\footnotesize\ttfamily salticidae\+::\+Peer\+Id Node\+::client\+\_\+id\hspace{0.3cm}{\ttfamily [private]}}
+
 \mbox{\Hypertarget{classNode_aa6b3592c4db64fa6cee507ee6261080c}\label{classNode_aa6b3592c4db64fa6cee507ee6261080c}} 
 \index{Node@{Node}!num\_acks@{num\_acks}}
 \index{num\_acks@{num\_acks}!Node@{Node}}

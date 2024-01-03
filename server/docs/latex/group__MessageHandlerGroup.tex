@@ -15,7 +15,15 @@ void \mbox{\hyperlink{group__MessageHandlerGroup_ga364091a5585371e28e68564c3d571
 void \mbox{\hyperlink{group__MessageHandlerGroup_gab5ec32f0537e6c913d4fb96a7188bfbc}{Node\+::operation\+\_\+handler}} (\mbox{\hyperlink{structMsgOp}{Msg\+Op}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
 \begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgOp}{Msg\+Op}} message gets received. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{group__MessageHandlerGroup_gae7fd57d493bd55c750fec06e9066a99d}{Node\+::ack\+\_\+handler}} (\mbox{\hyperlink{structMsgAck}{Msg\+Ack}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
-\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgAck}{Msg\+Ack}} message gets received. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgAck}{Msg\+Ack}} message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_gae5a6e892b537d523c2519c0a96d3484d}{Node\+::request\+\_\+handler}} (\mbox{\hyperlink{structMsgRequest}{Msg\+Request}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a request message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_gae22830e01f49a04b6d9f6ebedd65aec0}{Node\+::forward\+\_\+handler}} (\mbox{\hyperlink{structMsgForward}{Msg\+Forward}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a forward message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_ga8add83fec79b4a9953e444e0a8c79cb2}{Node\+::result\+\_\+handler}} (\mbox{\hyperlink{structMsgResult}{Msg\+Result}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a request message gets received. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__MessageHandlerGroup_ga6993f33a597c7f98e4b7e24662ee94af}{Node\+::reply\+\_\+handler}} (\mbox{\hyperlink{structMsgReply}{Msg\+Reply}} \&\&msg, const Net\+::conn\+\_\+t \&conn)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classHandler}{Handler}} for when a request message gets received. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -36,6 +44,7 @@ Code in the \mbox{\hyperlink{node_8h}{node.\+h}} file\+:
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{comment}{// We define the example\_handler that gets called when a MsgExample message gets received.}}
 \DoxyCodeLine{\textcolor{keywordtype}{void} example\_handler(MsgExample \&\&msg, \textcolor{keyword}{const} Net::conn\_t \&conn);}
+
 \end{DoxyCode}
 
 
@@ -44,10 +53,11 @@ Code in the \mbox{\hyperlink{node_8cpp}{node.\+cpp}} file\+:
 \DoxyCodeLine{\textcolor{keywordtype}{void} Node::example\_handler(MsgExample \&\&msg, \textcolor{keyword}{const} Net::conn\_t \&conn) \{}
 \DoxyCodeLine{     \textcolor{comment}{// Do stuff here}}
 \DoxyCodeLine{     \textcolor{comment}{// For example print the message...:}}
-\DoxyCodeLine{     cout << \textcolor{stringliteral}{"We got "} << msg.someMessage;}
+\DoxyCodeLine{     cout << \textcolor{stringliteral}{"{}We got "{}} << msg.someMessage;}
 \DoxyCodeLine{     \textcolor{comment}{// ... and the number:}}
-\DoxyCodeLine{     cout << \textcolor{stringliteral}{" and the number "} << msg.someNumber << \textcolor{stringliteral}{"\(\backslash\)n"};}
+\DoxyCodeLine{     cout << \textcolor{stringliteral}{"{} and the number "{}} << msg.someNumber << \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
 \DoxyCodeLine{\}}
+
 \end{DoxyCode}
 
 
@@ -58,6 +68,7 @@ Finally we also have to register the handler, this is done in the \mbox{\hyperli
 \DoxyCodeLine{     \mbox{\hyperlink{classNode_aaf4a1a712d49c3b816a5d82687102bab}{peerNet}}-\/>reg\_handler(salticidae::generic\_bind(\&Node::example\_handler, \textcolor{keyword}{this}, \_1, \_2));}
 \DoxyCodeLine{     ...}
 \DoxyCodeLine{\}}
+
 \end{DoxyCode}
 
 
@@ -74,7 +85,17 @@ The example\+\_\+handler will now be called when we receive a Msg\+Example messa
 
 \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgAck}{Msg\+Ack}} message gets received. 
 
-Simple handler printing that an A\+CK got received, which node sent it and which node received the A\+CK message. \mbox{\Hypertarget{group__MessageHandlerGroup_gab5ec32f0537e6c913d4fb96a7188bfbc}\label{group__MessageHandlerGroup_gab5ec32f0537e6c913d4fb96a7188bfbc}} 
+Simple handler printing that an ACK got received, which node sent it and which node received the ACK message. \mbox{\Hypertarget{group__MessageHandlerGroup_gae22830e01f49a04b6d9f6ebedd65aec0}\label{group__MessageHandlerGroup_gae22830e01f49a04b6d9f6ebedd65aec0}} 
+\index{Message specific handlers@{Message specific handlers}!forward\_handler@{forward\_handler}}
+\index{forward\_handler@{forward\_handler}!Message specific handlers@{Message specific handlers}}
+\doxysubsubsection{\texorpdfstring{forward\_handler()}{forward\_handler()}}
+{\footnotesize\ttfamily void Node\+::forward\+\_\+handler (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structMsgForward}{Msg\+Forward}} \&\&}]{msg,  }\item[{const Net\+::conn\+\_\+t \&}]{conn }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\mbox{\hyperlink{classHandler}{Handler}} for when a forward message gets received. 
+
+\mbox{\Hypertarget{group__MessageHandlerGroup_gab5ec32f0537e6c913d4fb96a7188bfbc}\label{group__MessageHandlerGroup_gab5ec32f0537e6c913d4fb96a7188bfbc}} 
 \index{Message specific handlers@{Message specific handlers}!operation\_handler@{operation\_handler}}
 \index{operation\_handler@{operation\_handler}!Message specific handlers@{Message specific handlers}}
 \doxysubsubsection{\texorpdfstring{operation\_handler()}{operation\_handler()}}
@@ -83,6 +104,36 @@ Simple handler printing that an A\+CK got received, which node sent it and which
 
 
 \mbox{\hyperlink{classHandler}{Handler}} for when a \mbox{\hyperlink{structMsgOp}{Msg\+Op}} message gets received. 
+
+\mbox{\Hypertarget{group__MessageHandlerGroup_ga6993f33a597c7f98e4b7e24662ee94af}\label{group__MessageHandlerGroup_ga6993f33a597c7f98e4b7e24662ee94af}} 
+\index{Message specific handlers@{Message specific handlers}!reply\_handler@{reply\_handler}}
+\index{reply\_handler@{reply\_handler}!Message specific handlers@{Message specific handlers}}
+\doxysubsubsection{\texorpdfstring{reply\_handler()}{reply\_handler()}}
+{\footnotesize\ttfamily void Node\+::reply\+\_\+handler (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structMsgReply}{Msg\+Reply}} \&\&}]{msg,  }\item[{const Net\+::conn\+\_\+t \&}]{conn }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\mbox{\hyperlink{classHandler}{Handler}} for when a request message gets received. 
+
+\mbox{\Hypertarget{group__MessageHandlerGroup_gae5a6e892b537d523c2519c0a96d3484d}\label{group__MessageHandlerGroup_gae5a6e892b537d523c2519c0a96d3484d}} 
+\index{Message specific handlers@{Message specific handlers}!request\_handler@{request\_handler}}
+\index{request\_handler@{request\_handler}!Message specific handlers@{Message specific handlers}}
+\doxysubsubsection{\texorpdfstring{request\_handler()}{request\_handler()}}
+{\footnotesize\ttfamily void Node\+::request\+\_\+handler (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structMsgRequest}{Msg\+Request}} \&\&}]{msg,  }\item[{const Net\+::conn\+\_\+t \&}]{conn }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\mbox{\hyperlink{classHandler}{Handler}} for when a request message gets received. 
+
+\mbox{\Hypertarget{group__MessageHandlerGroup_ga8add83fec79b4a9953e444e0a8c79cb2}\label{group__MessageHandlerGroup_ga8add83fec79b4a9953e444e0a8c79cb2}} 
+\index{Message specific handlers@{Message specific handlers}!result\_handler@{result\_handler}}
+\index{result\_handler@{result\_handler}!Message specific handlers@{Message specific handlers}}
+\doxysubsubsection{\texorpdfstring{result\_handler()}{result\_handler()}}
+{\footnotesize\ttfamily void Node\+::result\+\_\+handler (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structMsgResult}{Msg\+Result}} \&\&}]{msg,  }\item[{const Net\+::conn\+\_\+t \&}]{conn }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\mbox{\hyperlink{classHandler}{Handler}} for when a request message gets received. 
 
 \mbox{\Hypertarget{group__MessageHandlerGroup_ga53665f135e7bc71d53dd1e645abc1a3b}\label{group__MessageHandlerGroup_ga53665f135e7bc71d53dd1e645abc1a3b}} 
 \index{Message specific handlers@{Message specific handlers}!string\_handler@{string\_handler}}
