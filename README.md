@@ -1,4 +1,4 @@
-# BFT-Protocol-Framework
+#T-P BFT-Protocol-Framework
 
 
 
@@ -47,18 +47,6 @@ make
 sudo make install
 ```
 
-#### One line to install everything
-
-The following code block can be copied to the terminal to install everything:
-```
-sudo apt update && \
-sudo apt install -y build-essential cmake libuv1-dev libssl-dev && \
-git clone https://github.com/Determinant/salticidae.git && \
-cd salticidae/ && \
-cmake . && \
-make && \
-sudo make install
-```
 
 ## Building
 The project uses make to be built and the following make commands are available:
@@ -91,8 +79,3 @@ doxygen Doxygen
 The generated documentation of the current commit is also in this repository under "./server/docs/html/index.html".
 
 
-## TODO
-
-I would need a judgement from you how much time students would need to implement PBFT normal case in that framework. 
-
-Ideally it should be just building the protocol state machine and the framework does the rest.
