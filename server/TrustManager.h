@@ -33,12 +33,21 @@ public:
     // Declaration of the global trustMap as extern.
     static std::unordered_map<std::pair<salticidae::PeerId, salticidae::PeerId>, TrustInfo, pair_hash> trustMap;
     static std::unordered_map<salticidae::PeerId, double> globalTrustMap;
+        // Declaration of the consensus group
+    static std::vector<salticidae::PeerId> consensusGroup;
+
+        // Declaration of the primary group 
+    static std::vector<salticidae::PeerId> primaryGroup;
+
 
     // Methods to manipulate the trustMap
     static void updateTrust(const salticidae::PeerId& localPeer, const salticidae::PeerId& remotePeer, bool satisfactory);
     static void updateGlobalTrust(const salticidae::PeerId& localPeer);
 
     static void updateDirectTrust(const salticidae::PeerId& localPeer) ;
+
+    static void getConsensusGroup(double d);
+    static void getPrimaryGroup(double d);
 
     
 
@@ -54,6 +63,10 @@ public:
     // Method to print Initial value of globalTrustMap
     static void printGlobalTrustMap();
 
+    // Method to print the nodes of the consensus group
+    static void printConsensusGroup();
+     // Method to print the nodes of the primary group
+    static void printPrimaryGroup();
 
 private:
     // Private constructor to prevent instantiation

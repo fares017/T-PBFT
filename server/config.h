@@ -24,7 +24,18 @@ const std::string ADDRESS_STRING = "127.0.0.1";
 /**
  * @brief Define the number of nodes/replicas to use. 
 */
-#define NUM_NODES 4
+#define NUM_NODES 10
+
+/**
+ * @brief Define the percentage of consensus groupe.
+*/
+#define D 0.2
+
+/**
+ * @brief Define the percentage of primary groupe.
+*/
+#define M 0.5
+
 
 /**
  * @brief Define the port that is used for the client connecting to the replicas. 

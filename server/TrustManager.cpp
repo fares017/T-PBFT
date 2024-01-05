@@ -6,6 +6,10 @@
 std::unordered_map<std::pair<salticidae::PeerId, salticidae::PeerId>, TrustManager::TrustInfo, TrustManager::pair_hash> TrustManager::trustMap;
 // Definition of the static globalTrustMap
 std::unordered_map<salticidae::PeerId, double> TrustManager::globalTrustMap;
+// Declaration of the consensus group
+std::vector<salticidae::PeerId> TrustManager::consensusGroup;
+// Declaration of the primary group
+std::vector<salticidae::PeerId> TrustManager::primaryGroup;
 
 // Implementation of the methods
 void TrustManager::updateTrust(const salticidae::PeerId& localPeer, const salticidae::PeerId& remotePeer, bool satisfactory) {
@@ -75,7 +79,7 @@ void TrustManager::updateDirectTrust(const salticidae::PeerId& localPeer) {
 void TrustManager::updateGlobalTrust(const salticidae::PeerId& localPeer) {
     // Initialize global trust to 1 / NUM_NODES
     
-    double newGlobalTrust = 0.0;
+    double newGlobalTrust = globalTrustMap[localPeer] ;
 
     // Iterate over the trustMap
     for (const auto& entry : trustMap) {
@@ -103,6 +107,55 @@ void TrustManager::updateGlobalTrust(const salticidae::PeerId& localPeer) {
     globalTrustMap[localPeer] = newGlobalTrust;
 
 }
+
+
+
+
+void TrustManager::getConsensusGroup(double d) {
+    // Ensure that D is within the valid range (0 < d < 1)
+    d = std::max(std::min(d, 1.0), 0.0);
+
+    // Clear the existing consensusGroup
+    consensusGroup.clear();
+
+    // Create a vector of pairs (PeerId, globalTrust) for sorting
+    std::vector<std::pair<salticidae::PeerId, double>> trustVector(globalTrustMap.begin(), globalTrustMap.end());
+
+    // Sort the vector based on global trust in descending order
+    std::sort(trustVector.begin(), trustVector.end(),
+              [](const auto& a, const auto& b) { return a.second > b.second; });
+
+    // Determine the number of nodes to include in the consensus group
+    size_t numNodesInConsensus = static_cast<size_t>(d * NUM_NODES);
+
+    // Populate the consensusGroup with the top nodes
+    for (size_t i = 0; i < numNodesInConsensus; ++i) {
+        consensusGroup.push_back(trustVector[i].first);
+    }
+}
+
+
+void TrustManager::getPrimaryGroup(double m) {
+    // Ensure m is within the valid range (0 to 1)
+    m = std::max(0.0, std::min(1.0, m));
+
+    // Calculate the number of nodes to select based on the percentage
+    size_t numNodesToSelect = static_cast<size_t>(consensusGroup.size() * m);
+
+    // Sort the consensusGroup based on global trust (assuming you have a comparator function)
+    std::sort(consensusGroup.begin(), consensusGroup.end(), [](const salticidae::PeerId& a, const salticidae::PeerId& b) {
+        return globalTrustMap[a] > globalTrustMap[b];
+    });
+
+    // Clear the existing primaryGroup
+    primaryGroup.clear();
+
+    // Copy the top m% nodes to the primaryGroup
+    primaryGroup.insert(primaryGroup.end(), consensusGroup.begin(), consensusGroup.begin() + numNodesToSelect);
+}
+
+
+
 
 
 
@@ -141,11 +194,6 @@ void TrustManager::printInitialTrustMap() {
 
 
 
-
-
-
-
-
 void TrustManager::printGlobalTrustMap() {
     std::cout << "Global Trust Map contents:\n";
     for (const auto& entry : globalTrustMap) {
@@ -153,5 +201,21 @@ void TrustManager::printGlobalTrustMap() {
         const auto& value = entry.second;
 
         std::cout << "Node ID: " << key.to_hex() << ", Global Trust: " << value << "\n";
+    }
+}
+
+
+void TrustManager::printConsensusGroup() {
+    std::cout << "Consensus Group contents:\n";
+    for (const auto& node : consensusGroup) {
+        std::cout << "Node ID: " << node.to_hex() << "\n";
+    }
+}
+
+
+void TrustManager::printPrimaryGroup() {
+    std::cout << "Primary Group contents:\n";
+    for (const auto& node : primaryGroup) {
+        std::cout << "Node ID: " << node.to_hex() << "\n";
     }
 }

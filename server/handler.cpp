@@ -123,7 +123,22 @@ Handler::Handler(const salticidae::EventContext &ec, const Net::Config config) {
                 TrustManager::globalTrustMap[node] = 1.0 / NUM_NODES;
 
         }
+
+                // Initialize globalTrustMap with random Sat and Unsat values
+  
+        for (size_t i = 0; i < NUM_NODES; i++) {
+          
+                salticidae::PeerId node = nodes[i].peerId;
+                TrustManager::updateGlobalTrust(node);
+
+        }
     
     TrustManager::printGlobalTrustMap() ;
+
+    TrustManager::getConsensusGroup(D) ;
+    TrustManager::printConsensusGroup() ;
+
+    TrustManager::getPrimaryGroup(M) ;
+    TrustManager::printPrimaryGroup() ;
 }
 
