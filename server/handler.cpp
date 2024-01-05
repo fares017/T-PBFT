@@ -66,3 +66,4 @@ Handler::Handler(const salticidae::EventContext &ec, const Net::Config config) {
         nodes[i].set_peers(temp_peers);
     }
 }
+

@@ -60,54 +60,25 @@ void Node::prepare_handler(MsgPrepare &&msg, const Net::conn_t &conn) {
     std::hash<std::string> messagehash;
     int hashvalue = messagehash(msg.message);
 
-    // Create a pair for the trustMap key.
-    std::pair<std::string, salticidae::PeerId> nodePair(get_id(), conn->get_peer_id());
+
+    // Create PeerId for local and remote peers.
+    salticidae::PeerId localPeer = peerId;
+    salticidae::PeerId remotePeer = conn->get_peer_id();
+
+    // Update trust information using TrustManager.
+    TrustManager::updateTrust(localPeer, remotePeer, (hashvalue == msg.msghash));
+
+
 
     if (hashvalue == msg.msghash) {
-        // Message is valid, update or create TrustInfo in the global map.
-        auto it = trustMap.find(nodePair);
-
-        if (it != trustMap.end()) {
-            // Pair already exists, update local trust.
-            it->second.Sat++;
-        } else {
-            // Pair doesn't exist, create a new TrustInfo.
-            TrustInfo trustInfo;
-            trustInfo.nodeId = get_id();  // Keep nodeId as a string.
-            trustInfo.peerId = conn->get_peer_id();
-            trustInfo.Sat = 1;
-            trustInfo.Unsat = 0;
-
-            // Insert the new pair into the map.
-            trustMap[nodePair] = trustInfo;
-        }
-
-        // Continue processing the message or perform additional actions.
 
         // Broadcast or multicast as needed.
         peerNet->multicast_msg(MsgPrecommit(msg.order, msg.message, msg.msghash), peers);
-    } else {
-        // Message is invalid, store information without increasing local trust.
-        auto it = trustMap.find(nodePair);
+    } 
 
-        if (it == trustMap.end()) {
-            // Pair doesn't exist, create a new TrustInfo without increasing local trust.
-            TrustInfo trustInfo;
-            trustInfo.nodeId = get_id();  // Keep nodeId as a string.
-            trustInfo.peerId = conn->get_peer_id();
-            trustInfo.Sat = 0;  // Local trust remains unchanged for invalid messages.
-            trustInfo.Unsat = 1; 
 
-            // Insert the new pair into the map.
-            trustMap[nodePair] = trustInfo;
-        }else{
-             // Pair already exists, update local trust.
-            it->second.Unsat++;
-        }
-
-        // Additional actions for invalid messages, if needed.
-    }
 }
+
 
 
 void Node::precommit_handler(MsgPrecommit &&msg, const Net::conn_t &conn){
@@ -122,13 +93,8 @@ void Node::precommit_handler(MsgPrecommit &&msg, const Net::conn_t &conn){
 
                 // Print the trustMap
         cout << "TrustMap contents:\n";
-        for (const auto &entry : trustMap) {
-            const auto &key = entry.first;
-            const auto &value = entry.second;
-
-            cout << "Node ID: " << key.first << ", Peer ID: " << key.second.to_hex()
-                 << ", Number of Satisfactory transactions: " << value.Sat << ", Number of Unsatisfactory transactions: " << value.Unsat  << "\n";
-        }
+        // Print the trustMap
+        TrustManager::printTrustMap();
     } 
 }
 
