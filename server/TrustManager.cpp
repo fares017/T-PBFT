@@ -4,6 +4,8 @@
 
 // Definition of the static trustMap
 std::unordered_map<std::pair<salticidae::PeerId, salticidae::PeerId>, TrustManager::TrustInfo, TrustManager::pair_hash> TrustManager::trustMap;
+// Definition of the static globalTrustMap
+std::unordered_map<salticidae::PeerId, double> TrustManager::globalTrustMap;
 
 // Implementation of the methods
 void TrustManager::updateTrust(const salticidae::PeerId& localPeer, const salticidae::PeerId& remotePeer, bool satisfactory) {
@@ -32,64 +34,6 @@ void TrustManager::updateTrust(const salticidae::PeerId& localPeer, const saltic
         trustMap[key] = trustInfo;
     }
 }
-
-
-
-
-void TrustManager::printTrustMap() {
-    std::cout << "TrustMap contents:\n";
-    for (const auto &entry : trustMap) {
-        const auto &key = entry.first;
-        const auto &value = entry.second;
-
-        std::cout << "Local Peer ID: " << key.first.to_hex() << ", Remote Peer ID: " << key.second.to_hex()
-             << ", Number of Satisfactory transactions: " << value.Sat
-             << ", Number of Unsatisfactory transactions: " << value.Unsat << "\n";
-    }
-}
-
-
-
-
-// double TrustManager::calculateDirectTrust(const salticidae::PeerId& localPeer) {
-//     double  C = 0;
-//     uint64_t Stotal = 0;
-
-//     for (const auto& entry : trustMap) {
-//         const auto& key = entry.first;
-//         const auto& value = entry.second;
-
-//         if (key.first == localPeer || key.second == localPeer ) {
-//             // Calculate sat(i, j) - unsat(i, j)
-//             int S = value.Sat - value.Unsat;
-
-//             // Update total satisfactory transactions
-//             Stotal += std::max(S, 0);
-
-//         }
-//     }
-
-//     if (Stotal == 0) {
-//         // Set Cij to N if Stotal is zero
-//         C = 1/NUM_NODES;  // Assuming trustMap contains all possible remotePeers
-//     } else {
-//         // Calculate maxS(Sij, 0) / Stotal for each remotePeer
-//         for (const auto& entry : trustMap) {
-//             const auto& key = entry.first;
-//             const auto& value = entry.second;
-
-//             if (key.first == localPeer || key.second == localPeer ){
-//                  int S = value.Sat - value.Unsat;
-//                 uint64_t C = std::max(S, 0)  / Stotal;
-
-
-//             }
-//         }
-//     }
-
-//     return C;
-// }
-
 
 
 void TrustManager::updateDirectTrust(const salticidae::PeerId& localPeer) {
@@ -123,5 +67,91 @@ void TrustManager::updateDirectTrust(const salticidae::PeerId& localPeer) {
             // Update the Direct_Trust value in TrustInfo
             value.Direct_Trust = directTrust;
         }
+    }
+}
+
+
+
+void TrustManager::updateGlobalTrust(const salticidae::PeerId& localPeer) {
+    // Initialize global trust to 1 / NUM_NODES
+    
+    double newGlobalTrust = 0.0;
+
+    // Iterate over the trustMap
+    for (const auto& entry : trustMap) {
+        const auto& key = entry.first;
+        const auto& value = entry.second;
+
+        // Check if localPeer is one of the nodes and it's not the same node
+        if ((key.first == localPeer || key.second == localPeer) && key.first != key.second) {
+            salticidae::PeerId remotePeer;
+
+            // Determine the remote peer based on the conditions
+            if (key.first == localPeer) {
+                remotePeer = key.second;
+            } else {
+                remotePeer = key.first;
+            }
+
+            // Use remotePeer to calculate the contribution to global trust
+             double remotePeerGlobalTrust = globalTrustMap[remotePeer] ;
+            newGlobalTrust += remotePeerGlobalTrust * value.Direct_Trust;
+
+        }
+    }
+
+    globalTrustMap[localPeer] = newGlobalTrust;
+
+}
+
+
+
+
+
+
+ // Print the value of TrustMap
+void TrustManager::printTrustMap() {
+    std::cout << "TrustMap contents:\n";
+    for (const auto &entry : trustMap) {
+        const auto &key = entry.first;
+        const auto &value = entry.second;
+
+        std::cout << "Local Peer ID: " << key.first.to_hex() << ", Remote Peer ID: " << key.second.to_hex()
+             << ", Number of Satisfactory transactions: " << value.Sat << "\n"
+             << ", Number of Unsatisfactory transactions: " << value.Unsat << "\n";
+    }
+}
+
+ // Print the Initial value of TrustMap
+void TrustManager::printInitialTrustMap() {
+    std::cout << "TrustMap Initial contents:\n";
+    for (const auto &entry : trustMap) {
+        const auto &key = entry.first;
+        const auto &value = entry.second;
+
+        std::cout << "Local Peer ID: " << key.first.to_hex() <<  "\n"
+             <<  ", Remote Peer ID: " << key.second.to_hex() << "\n"
+             << ", Number of Satisfactory transactions: " << value.Sat << "\n"
+             << ", Number of Unsatisfactory transactions: " << value.Unsat << "\n"
+             << ", Direct Trust Value " << value.Direct_Trust << "\n";
+    }
+}
+
+
+
+
+
+
+
+
+
+
+void TrustManager::printGlobalTrustMap() {
+    std::cout << "Global Trust Map contents:\n";
+    for (const auto& entry : globalTrustMap) {
+        const auto& key = entry.first;
+        const auto& value = entry.second;
+
+        std::cout << "Node ID: " << key.to_hex() << ", Global Trust: " << value << "\n";
     }
 }

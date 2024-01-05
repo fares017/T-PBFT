@@ -1,10 +1,14 @@
 #ifndef FRAMEWORK_HANDLER_H
 #define FRAMEWORK_HANDLER_H
+#pragma once
 
 #include <iostream>
 
 #include <salticidae/network.h>
 
+
+
+#include "TrustManager.h"
 #include "config.h"
 #include "messages.h"
 #include "node.h"

@@ -65,5 +65,65 @@ Handler::Handler(const salticidae::EventContext &ec, const Net::Config config) {
 
         nodes[i].set_peers(temp_peers);
     }
+
+
+        // Initialize TrustMap with random Sat and Unsat values
+    for (size_t i = 0; i < NUM_NODES; i++) {
+        for (size_t j = 0; j < NUM_NODES; j++) {
+            if (i != j) {
+                salticidae::PeerId localPeer = nodes[i].peerId;
+                salticidae::PeerId remotePeer = nodes[j].peerId;
+
+                // Generate random Sat and Unsat values
+                int randSat = rand() % 11;  // Random number between 0 and 10
+                int randUnsat = rand() % 11;
+
+                // int randSat = 0;  
+                // int randUnsat = 0;
+
+                // Check if the pair already exists in trustMap
+                auto key = (localPeer < remotePeer) ? std::make_pair(localPeer, remotePeer) : std::make_pair(remotePeer, localPeer);
+                auto it = TrustManager::trustMap.find(key);
+
+                if (it != TrustManager::trustMap.end()) {
+                    // Pair already exists, update trust values.
+                   
+                } else {
+                    // Pair doesn't exist, create a new TrustInfo.
+                    TrustManager::TrustInfo trustInfo;
+                    trustInfo.localPeer = localPeer;
+                    trustInfo.remotePeer = remotePeer;
+                    trustInfo.Sat = randSat;
+                    trustInfo.Unsat = randUnsat;
+
+                    // Insert the new pair into the map.
+                    TrustManager::trustMap[key] = trustInfo;
+                }
+            }
+        }
+    }
+
+
+        // Update Direct_Trust values
+    for (size_t i = 0; i < NUM_NODES; i++) {
+        salticidae::PeerId localPeer = nodes[i].peerId;
+        TrustManager::updateDirectTrust(localPeer);
+    }
+
+     
+    TrustManager::printInitialTrustMap() ;
+
+
+
+        // Initialize globalTrustMap with random Sat and Unsat values
+  
+        for (size_t i = 0; i < NUM_NODES; i++) {
+          
+                salticidae::PeerId node = nodes[i].peerId;
+                TrustManager::globalTrustMap[node] = 1.0 / NUM_NODES;
+
+        }
+    
+    TrustManager::printGlobalTrustMap() ;
 }
 

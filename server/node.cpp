@@ -67,6 +67,10 @@ void Node::prepare_handler(MsgPrepare &&msg, const Net::conn_t &conn) {
 
     // Update trust information using TrustManager.
     TrustManager::updateTrust(localPeer, remotePeer, (hashvalue == msg.msghash));
+                    // Print the trustMap
+        cout << "TrustMap contents:\n";
+        // Print the trustMap
+        TrustManager::printTrustMap();
 
 
 
@@ -91,10 +95,7 @@ void Node::precommit_handler(MsgPrecommit &&msg, const Net::conn_t &conn){
         }
         //prepared_message.remove(msg);
 
-                // Print the trustMap
-        cout << "TrustMap contents:\n";
-        // Print the trustMap
-        TrustManager::printTrustMap();
+
     } 
 }
 

@@ -32,9 +32,11 @@ public:
 
     // Declaration of the global trustMap as extern.
     static std::unordered_map<std::pair<salticidae::PeerId, salticidae::PeerId>, TrustInfo, pair_hash> trustMap;
+    static std::unordered_map<salticidae::PeerId, double> globalTrustMap;
 
     // Methods to manipulate the trustMap
     static void updateTrust(const salticidae::PeerId& localPeer, const salticidae::PeerId& remotePeer, bool satisfactory);
+    static void updateGlobalTrust(const salticidae::PeerId& localPeer);
 
     static void updateDirectTrust(const salticidae::PeerId& localPeer) ;
 
@@ -45,6 +47,13 @@ public:
 
         // Method to print trustMap
     static void printTrustMap();
+
+        // Method to print Initial value of trustMap
+    static void printInitialTrustMap();
+
+    // Method to print Initial value of globalTrustMap
+    static void printGlobalTrustMap();
+
 
 private:
     // Private constructor to prevent instantiation
