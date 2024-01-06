@@ -29,12 +29,12 @@ const std::string ADDRESS_STRING = "127.0.0.1";
 /**
  * @brief Define the percentage of consensus groupe.
 */
-#define D 0.2
+#define D2 0.6
 
 /**
  * @brief Define the percentage of primary groupe.
 */
-#define M 0.5
+#define M2 0.5
 
 
 /**

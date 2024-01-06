@@ -12,6 +12,10 @@ Handler::Handler(const salticidae::EventContext &ec, const Net::Config config) {
     // Create a vector with the peerId from all the nodes.
     std::vector<salticidae::PeerId> peers;
     peers.resize(NUM_NODES);
+    RSAKeyGenerator keyGenerator;
+    std::unordered_map<salticidae::PeerId, CryptoPP::RSA::PublicKey> publicKeysID;
+    CryptoPP::RSA::PrivateKey groupPrivateKey = keyGenerator.GeneratePrivateKey();
+    CryptoPP::RSA::PublicKey groupPublicKey = keyGenerator.GeneratePublicKey(groupPrivateKey);
 
     // Iterate over the number of nodes and create nodes.
     for (uint i = 0; i < NUM_NODES; i++) {
@@ -21,9 +25,13 @@ Handler::Handler(const salticidae::EventContext &ec, const Net::Config config) {
 
         // Add the peerId to the vector of known ids.
         peers[i] = pid;
+        //Assign RSA public key private key
+        CryptoPP::RSA::PrivateKey privateKey = keyGenerator.GeneratePrivateKey();
+        CryptoPP::RSA::PublicKey publicKey = keyGenerator.GeneratePublicKey(privateKey);
+        publicKeysID[pid] = publicKey;
 
         // Create node/peer with its settings.
-        nodes[i] = Node(ec, config, peer_addr, pid);
+        nodes[i] = Node(ec, config, peer_addr, pid, privateKey, publicKey);
         // Register the message callbacks of the node.
         nodes[i].reg_handlers();
     }
@@ -64,6 +72,8 @@ Handler::Handler(const salticidae::EventContext &ec, const Net::Config config) {
         #endif
 
         nodes[i].set_peers(temp_peers);
+        nodes[i].set_publickeys(publicKeysID);
+        //nodes[i].set_group_publicKey(groupPublicKey);
     }
 
 
@@ -135,10 +145,21 @@ Handler::Handler(const salticidae::EventContext &ec, const Net::Config config) {
     
     TrustManager::printGlobalTrustMap() ;
 
-    TrustManager::getConsensusGroup(D) ;
+    TrustManager::getConsensusGroup(D2) ;
     TrustManager::printConsensusGroup() ;
 
-    TrustManager::getPrimaryGroup(M) ;
+    TrustManager::getPrimaryGroup(M2) ;
     TrustManager::printPrimaryGroup() ;
+   // RSAKeyGenerator::assignGroupKey();
+   std::vector<salticidae::PeerId> primary_group = TrustManager::primaryGroup;
+   for (size_t i = 0; i < NUM_NODES; i++)
+    {
+        if (std::find(primary_group.begin(), primary_group.end(), nodes[i].peerId) != primary_group.end())
+        {
+            nodes[i].set_group_privateKey(groupPrivateKey);
+        }
+        nodes[i].set_group_publicKey(groupPublicKey);
+    }
+    RSAKeyGenerator::randomValueGenerator();
 }
 

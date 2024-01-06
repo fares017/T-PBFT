@@ -6,9 +6,14 @@
 #include <list>
 #include <salticidae/network.h>
 #include <functional>
+#include <crypto++/rsa.h>
+#include <openssl/evp.h>
+
 
 #include "config.h"
 #include "messages.h"
+#include "rsakey.h"
+#include "TrustManager.h"
 
 using std::cout;
 using salticidae::_1;
@@ -35,6 +40,8 @@ using AddressNetworkVector = std::vector<std::pair<salticidae::NetAddr, std::uni
  * @param config The configuration for this node's network.
  * @param paddr The networking address for this node.
  * @param pid The peer id for this node, also used as an ID for this node.
+ * @param privateKey RSA private key for the node
+ * @param publicKey RSA public key for the node
 */
 class Node {
     public:
@@ -44,9 +51,11 @@ class Node {
         salticidae::NetAddr peerAddr;
         //! PeerId for this node.
         salticidae::PeerId peerId;
+        CryptoPP::RSA::PrivateKey privateKey;
+        CryptoPP::RSA::PublicKey publicKey;
 
         //! Constructor creating a new node.
-        Node(const salticidae::EventContext &ec, const Net::Config config, const salticidae::NetAddr paddr, const salticidae::PeerId pid);
+        Node(const salticidae::EventContext &ec, const Net::Config config, const salticidae::NetAddr paddr, const salticidae::PeerId pid, const CryptoPP::RSA::PrivateKey prKey, const CryptoPP::RSA::PublicKey puKey);
         Node();
 
         /**
@@ -55,6 +64,17 @@ class Node {
          * @param peers The vector of peers being the neighours of this peer.
         */
         void set_peers(std::vector<salticidae::PeerId> peers);
+
+        //set vector for publickeys of peers
+        void set_publickeys(std::unordered_map<salticidae::PeerId, CryptoPP::RSA::PublicKey> publicKeysID);
+        //set primary group
+        void set_primarygroup(std::vector<salticidae::PeerId> primary_group);
+        //set consensus group
+        void set_consensusgroup(std::vector<salticidae::PeerId> consensus_group);
+        //set group private key
+        void set_group_privateKey(CryptoPP::RSA::PrivateKey groupPrivateKey);
+        //set group public key
+        void set_group_publicKey(CryptoPP::RSA::PublicKey groupPublicKey);
 
         /**
          * Member function to register all the message callback handlers.
@@ -90,8 +110,15 @@ class Node {
          * Set a vector of PeerId, which is used to describe other peers that are known to this one.
          * Peers in this vector describe the nodes we should broadcast messages to.
         */
+       // static RSAKeyGenerator keyManager;
         std::vector<salticidae::PeerId> peers;
+        std::vector<salticidae::PeerId> primary_group;
+        std::vector<salticidae::PeerId> consensus_group;
+        CryptoPP::RSA::PrivateKey groupPrivateKey;
+        CryptoPP::RSA::PublicKey groupPublicKey;
+        
 
+        std::unordered_map<salticidae::PeerId, CryptoPP::RSA::PublicKey> publicKeysID;
         uint8_t num_acks = 0;
 
         std::unordered_map<salticidae::PeerId, bool> pidmap;
@@ -99,11 +126,13 @@ class Node {
 
         // Member variables to store state accross callbacks.
         salticidae::PeerId client_id;
+        std::string client_request;
         int a = 0;
         int b = 0;
-        std::list<MsgPrecommit> prepared_message;
-
-
+        std::list<MsgPrepare> prepared_message;
+        std::list<MsgCommit> commit_message;
+        std::list<bool> verified_message;
+        unsigned long prepared_messages = 0;
         /**
          * A handler is called when its specific message type gets received.
          * Operations resulting from receiving that message can then be done in the body of the member function.
@@ -153,8 +182,11 @@ class Node {
         */
         void string_handler(MsgString &&msg, const Net::conn_t &conn);
         void prepare_handler(MsgPrepare &&msg, const Net::conn_t &conn);
-        void precommit_handler(MsgPrecommit &&msg, const Net::conn_t &conn);
+        void commit_handler(MsgCommit &&msg, const Net::conn_t &conn);
         void preprepare_handler(MsgPreprepare &&msg, const Net::conn_t &conn);
+        void group_handler(MsgGroup &&msg, const Net::conn_t &conn);
+        void primary_consensus_handler(MsgPrimaryConsensus &&msg, const Net::conn_t &conn);
+        void primary_verified_handler(MsgPrimaryVerified &&msg, const Net::conn_t &conn);
         /**
          * @ingroup MessageHandlerGroup
          * 

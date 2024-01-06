@@ -131,29 +131,44 @@ MsgReply::MsgReply(DataStream &&s) {
 }
 //Prepare message
 const opcode_t MsgPrepare::opcode;
-MsgPrepare::MsgPrepare(const uint &order, const std::string &message, const int &msghash){
+MsgPrepare::MsgPrepare(const std::string &message, const std::string &orderNumber, const std::string &groupSign, const std::string &peerSign){
     serialized << htole((uint32_t)message.length());
     serialized << message;
-    serialized << order;
-    serialized << msghash;
+    serialized << htole((uint32_t)orderNumber.length());
+    serialized << orderNumber;
+    serialized << htole((uint32_t)groupSign.length());
+    serialized << groupSign;
+    serialized << htole((uint32_t)peerSign.length());
+    serialized << peerSign;
 }
 MsgPrepare::MsgPrepare(DataStream &&s){
     uint32_t len;
     s >> len;
     len = letoh(len);
     message = std::string((const char *)s.get_data_inplace(len), len);
-    s >> order;
-    s >> msghash;
+    uint32_t len2;
+    s >> len2;
+    len2 = letoh(len2);
+    orderNumber = std::string((const char *)s.get_data_inplace(len2), len2);
+    uint32_t len3;
+    s >> len3;
+    len3 = letoh(len3);
+    groupSign = std::string((const char *)s.get_data_inplace(len3), len3);
+    uint32_t len4;
+    s >> len4;
+    len4 = letoh(len4);
+    peerSign = std::string((const char *)s.get_data_inplace(len4), len4);
+
 }
 //Precommit message
-const opcode_t MsgPrecommit::opcode;
-MsgPrecommit::MsgPrecommit(const uint &order, const std::string &message, const int &msghash){
+const opcode_t MsgCommit::opcode;
+MsgCommit::MsgCommit(const uint &order, const std::string &message, const int &msghash){
     serialized << htole((uint32_t)message.length());
     serialized << message;
     serialized << order;
     serialized << msghash;
 }
-MsgPrecommit::MsgPrecommit(DataStream &&s){
+MsgCommit::MsgCommit(DataStream &&s){
     uint32_t len;
     s >> len;
     len = letoh(len);
@@ -163,13 +178,69 @@ MsgPrecommit::MsgPrecommit(DataStream &&s){
 }
 //Preprepare message
 const opcode_t MsgPreprepare::opcode;
-MsgPreprepare::MsgPreprepare(const std::string &message) {
+MsgPreprepare::MsgPreprepare(const std::string &message, const std::string signature, const std::string &orderNumber) {
     serialized << htole((uint32_t)message.length());
     serialized << message;
+    serialized << htole((uint32_t)signature.length());
+    serialized << signature;
+    serialized << htole((uint32_t)orderNumber.length());
+    serialized << orderNumber;
 }
 MsgPreprepare::MsgPreprepare(DataStream &&s) {
     uint32_t len;
     s >> len;
     len = letoh(len);
     message = std::string((const char *)s.get_data_inplace(len), len);
+    uint32_t len2;
+    s >> len2;
+    len2 = letoh(len2);
+    signature = std::string((const char *)s.get_data_inplace(len2), len2);
+    uint32_t len3;
+    s >> len3;
+    len3 = letoh(len3);
+    orderNumber = std::string((const char *)s.get_data_inplace(len3), len3);
+}
+//MsgGroup to receive message from client
+const opcode_t MsgGroup::opcode;
+MsgGroup::MsgGroup(const std::string &message) {
+    serialized << htole((uint32_t)message.length());
+    serialized << message;
+}
+MsgGroup::MsgGroup(DataStream &&s) {
+    uint32_t len;
+    s >> len;
+    len = letoh(len);
+    message = std::string((const char *)s.get_data_inplace(len), len);
+}
+//MsgPrimaryConsensus between primary group nodes to verify message.
+const opcode_t MsgPrimaryConsensus::opcode;
+MsgPrimaryConsensus::MsgPrimaryConsensus(const std::string &message, const std::string signature, const std::string &orderNumber) {
+    serialized << htole((uint32_t)message.length());
+    serialized << message;
+    serialized << htole((uint32_t)signature.length());
+    serialized << signature;
+    serialized << htole((uint32_t)orderNumber.length());
+    serialized << orderNumber;
+}
+MsgPrimaryConsensus::MsgPrimaryConsensus(DataStream &&s) {
+    uint32_t len;
+    s >> len;
+    len = letoh(len);
+    message = std::string((const char *)s.get_data_inplace(len), len);
+    uint32_t len2;
+    s >> len2;
+    len2 = letoh(len2);
+    signature = std::string((const char *)s.get_data_inplace(len2), len2);
+    uint32_t len3;
+    s >> len3;
+    len3 = letoh(len3);
+    orderNumber = std::string((const char *)s.get_data_inplace(len3), len3);
+}
+//MsgPrimaryVerified send back acknowledgment to that one node
+const opcode_t MsgPrimaryVerified::opcode;
+MsgPrimaryVerified::MsgPrimaryVerified(const bool &verified) {
+    serialized << verified;
+}
+MsgPrimaryVerified::MsgPrimaryVerified(DataStream &&s) {
+    s >> verified;
 }

@@ -15,14 +15,16 @@ using std::cout;
 
 std::unique_ptr<Net> net;
 
-void message(salticidae::PeerId pid) {
+void message(std::vector<salticidae::PeerId> peers) {
     usleep(3000000); // in microseconds
     cout << "Sending message!\n";
 
     // Send message request with a = 25 and b = 75
     //net->send_msg(MsgRequest(25, 75), pid);
-    net->send_msg(MsgPreprepare("at"), pid);
-    //net->send_msg(MsgString("attackerrelease"), pid);
+    //net->send_msg(MsgPreprepare("at"), pid);
+    net->multicast_msg(MsgGroup("attackerrelease"), peers);
+    // net->send_msg(MsgGroup("attackerrelease"), pid2);
+    // net->send_msg(MsgGroup("attackerrelease"), pid3);
     //usleep(2000000); // in microseconds
     //exit(0);
 }
@@ -51,7 +53,7 @@ void reply_handler(MsgReply &&msg, const Net::conn_t &conn) {
 }
 
 void ack_handler(MsgAck &&msg, const Net::conn_t &conn) {
-     cout << "Got ACK:\n";
+     cout << "Got ACK: \n";
      cout << "\tFrom " << conn->get_peer_id().to_hex() << "\n";
 }
 
@@ -76,9 +78,10 @@ int main() {
     net = std::make_unique<Net>(ec, config);
 
     // Address of "managing" node.
+    
     std::string address_string = ADDRESS_STRING + ":" + std::to_string(ADDRESS_PORT);
     // std::string address_string_1 = ADDRESS_STRING + ":" + std::to_string(ADDRESS_PORT + 1);
-
+    // std::string address_string_2 = ADDRESS_STRING + ":" + std::to_string(ADDRESS_PORT + 2);
 
     salticidae::NetAddr address(address_string);
     salticidae::PeerId pid{address};
@@ -89,8 +92,14 @@ int main() {
     // Register handlers.
     //net->reg_handler(ack_handler);
     //net->reg_handler(string_handler);
+    std::vector<salticidae::PeerId> peers;
+    peers.resize(NUM_NODES);
+    for (uint i = 0; i < NUM_NODES; i++) { 
+        std::string address_string = ADDRESS_STRING + ":" + std::to_string(ADDRESS_PORT + i);
+        salticidae::PeerId pid1 = connect_peer(address_string);
+        peers[i] = pid1;
 
-
+    }
     // Register the handler for handling reply type messages.
     net->reg_handler(reply_handler);
     net->reg_handler(ack_handler);
@@ -104,9 +113,12 @@ int main() {
     net->start();
     net->listen(my_addr);
 
-    salticidae::PeerId pid1 = connect_peer(address_string);
+    // salticidae::PeerId pid1 = connect_peer(address_string);
+    // salticidae::PeerId pid2 = connect_peer(address_string_1);
+    // salticidae::PeerId pid3 = connect_peer(address_string_2);
 
-    std::thread thread_obj(message, pid1);
+    std::thread thread_obj(message, peers);
+
 
     ec.dispatch();
     return 0;

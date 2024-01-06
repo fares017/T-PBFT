@@ -4,8 +4,9 @@
 #include <string>
 #include<iostream>
 #include <salticidae/msg.h>
-
+#include <crypto++/rsa.h>
 #include "config.h"
+
 
 using salticidae::DataStream;
 using salticidae::htole;
@@ -265,19 +266,20 @@ struct MsgPrepare {
     static const opcode_t opcode = 0x9;
     DataStream serialized;
     //Order number
-    uint order;
+    std::string orderNumber;
     //message
     std::string message;
-    //hash
-    int msghash;
+    //signatures
+    std::string groupSign;
+    std::string peerSign;
 
-    MsgPrepare(const uint &order, const std::string &message, const int &msghash);
+    MsgPrepare(const std::string &message, const std::string &orderNumber, const std::string &groupSign, const std::string &peerSign);
     MsgPrepare(DataStream &&s);
 
 };
 /** @} */
 //Msg Precommit
-struct MsgPrecommit {
+struct MsgCommit {
     static const opcode_t opcode = 0x10;
     DataStream serialized;
     //Order number
@@ -287,8 +289,8 @@ struct MsgPrecommit {
     //hash
     int msghash;
 
-    MsgPrecommit(const uint &order, const std::string &message, const int &msghash);
-    MsgPrecommit(DataStream &&s);
+    MsgCommit(const uint &order, const std::string &message, const int &msghash);
+    MsgCommit(DataStream &&s);
 
 };
 /** @} */
@@ -300,10 +302,55 @@ struct MsgPreprepare{
     DataStream serialized;
     //! Member variable storing the actual message as a string.
     std::string message;
+    std::string signature;
+    std::string orderNumber;
 
     //! Serialize the object from C++ datatypes to a data stream we can send over the network.
-    MsgPreprepare(const std::string &message);
+    MsgPreprepare(const std::string &message, const std::string signature, const std::string &orderNumber);
     //! Serialize the object from a data stream to C++ datatypes.
     MsgPreprepare(DataStream &&s);
 };
+/** @} */
+//MsgGroup
+struct MsgGroup{
+    //! Set unique opcode for this message.
+    static const opcode_t opcode = 0x12;
+    //! Member variable storing the serialized version of the message.
+    DataStream serialized;
+    //! Member variable storing the actual message as a string.
+    std::string message;
+    //! Serialize the object from C++ datatypes to a data stream we can send over the network.
+    MsgGroup(const std::string &message);
+    //! Serialize the object from a data stream to C++ datatypes.
+    MsgGroup(DataStream &&s);
+};
+//Primary Group verification
+struct MsgPrimaryConsensus{
+    //! Set unique opcode for this message.
+    static const opcode_t opcode = 0x13;
+    //! Member variable storing the serialized version of the message.
+    DataStream serialized;
+    //! Member variable storing the actual message as a string.
+    std::string message;
+    std::string signature;
+    std::string orderNumber;
+    //! Serialize the object from C++ datatypes to a data stream we can send over the network.
+    MsgPrimaryConsensus(const std::string &message, const std::string signature, const std::string &orderNumber);
+    //! Serialize the object from a data stream to C++ datatypes.
+    MsgPrimaryConsensus(DataStream &&s);
+};
+//primary group verified
+struct MsgPrimaryVerified{
+    //! Set unique opcode for this message.
+    static const opcode_t opcode = 0x14;
+    //! Member variable storing the serialized version of the message.
+    DataStream serialized;
+    //! Member variable storing the actual message as a string.
+    bool verified;
+    //! Serialize the object from C++ datatypes to a data stream we can send over the network.
+    MsgPrimaryVerified(const bool &verified);
+    //! Serialize the object from a data stream to C++ datatypes.
+    MsgPrimaryVerified(DataStream &&s);
+};
+
 #endif

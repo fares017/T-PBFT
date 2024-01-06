@@ -39,7 +39,6 @@ public:
         // Declaration of the primary group 
     static std::vector<salticidae::PeerId> primaryGroup;
 
-
     // Methods to manipulate the trustMap
     static void updateTrust(const salticidae::PeerId& localPeer, const salticidae::PeerId& remotePeer, bool satisfactory);
     static void updateGlobalTrust(const salticidae::PeerId& localPeer);
@@ -48,7 +47,6 @@ public:
 
     static void getConsensusGroup(double d);
     static void getPrimaryGroup(double d);
-
     
 
 
