@@ -28,9 +28,11 @@ void Node::reg_handlers() {
     peerNet->reg_handler(salticidae::generic_bind(&Node::prepare_handler, this, _1, _2));
     peerNet->reg_handler(salticidae::generic_bind(&Node::commit_handler, this, _1, _2));
     peerNet->reg_handler(salticidae::generic_bind(&Node::preprepare_handler, this, _1, _2));
-    peerNet->reg_handler(salticidae::generic_bind(&Node::group_handler, this, _1, _2));
+    //peerNet->reg_handler(salticidae::generic_bind(&Node::group_handler, this, _1, _2));
+    peerNet->reg_handler(salticidae::generic_bind(&Node::group_request_handler, this, _1, _2)); 
     peerNet->reg_handler(salticidae::generic_bind(&Node::primary_consensus_handler, this, _1, _2));
     peerNet->reg_handler(salticidae::generic_bind(&Node::primary_verified_handler, this, _1, _2));
+    peerNet->reg_handler(salticidae::generic_bind(&Node::send_reply_handler, this, _1, _2));
     // Register handlers for the different message types that we have now.
     peerNet->reg_handler(salticidae::generic_bind(&Node::request_handler, this, _1, _2));
     peerNet->reg_handler(salticidae::generic_bind(&Node::forward_handler, this, _1, _2));
@@ -82,42 +84,145 @@ void Node::set_primarygroup(std::vector<salticidae::PeerId> primary_group) {
 void Node::set_consensusgroup(std::vector<salticidae::PeerId> consensus_group) {
     this->consensus_group = consensus_group;
 }
-void Node::set_group_privateKey(CryptoPP::RSA::PrivateKey groupPrivateKey) {
-    this->groupPrivateKey = groupPrivateKey;
-}
-void Node::set_group_publicKey(CryptoPP::RSA::PublicKey groupPublicKey) {
-    this->groupPublicKey = groupPublicKey;
-}
-void Node::group_handler(MsgGroup &&msg, const Net::conn_t &conn) {
-    cout <<"Node " << get_id() << "got client request message from " << conn->get_peer_id().to_hex() << "\n";
-    RSAKeyGenerator keyManager;
-    std::string signature;
-    client_request = msg.message;
-    client_id = conn->get_peer_id();
-    //cout << primary_group[0].to_hex() << "\n";
-    //cout << peerId.to_hex() << "\n";
-    std::vector<salticidae::PeerId> primary = TrustManager::primaryGroup;
-    int val = RSAKeyGenerator::getRandomValue();
-    cout << "Radnom value is " << val << "\n";
-    if (peerId == primary[val])
-    {
-        cout << "\tMessage: " << msg.message << "\n";
-        RSAKeyGenerator::incrementOrderNumber(); 
-        int currentOrderNumber = RSAKeyGenerator::getOrderNumber();
-        std::string orderNumber = std::to_string(currentOrderNumber);
-        std::string message = msg.message;
-        std::string combinedData = orderNumber + message;
-        signature = keyManager.SignMessage(combinedData, privateKey);
-        for (const auto &pid: primary) {
-            if (pid != peerId) {
-                peerNet->send_msg(MsgPrimaryConsensus(message, signature, orderNumber), pid);
+// void Node::set_group_privateKey(CryptoPP::RSA::PrivateKey groupPrivateKey) {
+//     this->groupPrivateKey = groupPrivateKey;
+// }
+// void Node::set_group_publicKey(CryptoPP::RSA::PublicKey groupPublicKey) {
+//     this->groupPublicKey = groupPublicKey;
+// }
+
+
+
+
+
+
+// // Initialize members
+// std::queue<MsgGroup> Node::requestQueue;
+// std::mutex Node::queueMutex;
+// std::condition_variable Node::queueCondition; 
+// std::condition_variable Node::replyCondition; 
+// bool Node::replySent = false;
+// std::thread Node::processingThread; 
+
+
+//Mutex to protect access to the queue
+std::mutex queueMutex;
+// Condition variable to signal when a new item is added to the queue
+std::condition_variable queueCondition; 
+//Condition variable for the reply 
+std::condition_variable replyCondition;
+
+
+ //To save requests in a queue 
+std::queue<MsgGroup> requestQueue;
+
+
+void Node::group_request_handler(MsgGroup &&msg, const Net::conn_t &conn) { 
+
+    // Lock the queue to safely access it
+    std::unique_lock<std::mutex> lock(queueMutex); 
+
+    // Add the received MsgGroup object to the queue
+    requestQueue.push(std::move(msg)); 
+
+    queueCondition.notify_one();  // Notify that a new request is available
+
+    // Wait for a new request to be available
+    queueCondition.wait(lock, [this] { return !requestQueue.empty(); }); 
+
+    // Retrieve the first item from the queue
+    MsgGroup receivedMsg = std::move(requestQueue.front());
+    requestQueue.pop();  // Remove the item from the queue
+
+    lock.unlock();  // Release the lock before processing 
+
+    // Process the MsgGroup object
+    cout << "Processing MsgGroup! \n"; 
+    //MsgGroup receivedMsg = msg; 
+    Node::process_group_request(receivedMsg, conn);  
+
+
+    // Wait until the reply is sent
+    //replyCondition.wait(lock, [this] { return replySent; });
+
+    // Reset the flag for the next iteration
+    replySent = false;
+
+    // Lock the queue again for the next iteration
+    lock.lock(); 
+
+} 
+
+
+
+
+
+void Node::process_group_request(const MsgGroup msg, const Net::conn_t conn) { 
+        cout <<"Node " << get_id() << "got client request message from " << conn->get_peer_id().to_hex() << "\n";  
+        RSAKeyGenerator keyManager;
+        std::string signature;
+        client_request = msg.message;
+        client_id = conn->get_peer_id();
+        std::vector<salticidae::PeerId> primary = TrustManager::primaryGroup;
+        int val = RSAKeyGenerator::getRandomValue();
+        cout << "Random value is " << val << "\n";
+        if (peerId == primary[val])
+        {
+            cout << "\tMessage: " << msg.message << "\n";
+            RSAKeyGenerator::incrementOrderNumber(); 
+            int currentOrderNumber = RSAKeyGenerator::getOrderNumber();
+            std::string orderNumber = std::to_string(currentOrderNumber);
+            std::string message = msg.message;
+            std::string combinedData = orderNumber + message;
+            signature = keyManager.SignMessage(combinedData, privateKey);
+            for (const auto &pid: primary) {
+                if (pid != peerId) {
+                    peerNet->send_msg(MsgPrimaryConsensus(message, signature, orderNumber), pid);
+                }
             }
         }
-        //peerNet->multicast_msg(MsgPrimaryConsensus(message, signature, orderNumber), primary_group);
-    }
-    cout << "\tMessage: " << msg.message << "\n";
-    peerNet->send_msg(MsgAck(), conn);
+        cout << "\tMessage: " << msg.message << "\n";
+        peerNet->send_msg(MsgAck(), conn); 
 }
+
+
+
+
+
+
+// void Node::group_handler(MsgGroup &&msg, const Net::conn_t &conn) {
+//     cout <<"Node " << get_id() << "got client request message from " << conn->get_peer_id().to_hex() << "\n";
+//     RSAKeyGenerator keyManager;
+//     std::string signature;
+//     client_request = msg.message;
+//     client_id = conn->get_peer_id();
+//     //cout << primary_group[0].to_hex() << "\n";
+//     //cout << peerId.to_hex() << "\n";
+//     std::vector<salticidae::PeerId> primary = TrustManager::primaryGroup;
+//     int val = RSAKeyGenerator::getRandomValue();
+//     if (peerId == primary[val])
+//     {
+//         cout << "\tMessage: " << msg.message << "\n";
+//         RSAKeyGenerator::incrementOrderNumber(); 
+//         int currentOrderNumber = RSAKeyGenerator::getOrderNumber();
+//         std::string orderNumber = std::to_string(currentOrderNumber);
+//         std::string message = msg.message;
+//         std::string combinedData = orderNumber + message;
+//         signature = keyManager.SignMessage(combinedData, privateKey);
+//         for (const auto &pid: primary) {
+//             if (pid != peerId) {
+//                 peerNet->send_msg(MsgPrimaryConsensus(message, signature, orderNumber), pid);
+//             }
+//         }
+//         //peerNet->multicast_msg(MsgPrimaryConsensus(message, signature, orderNumber), primary_group);
+//     }
+//     cout << "\tMessage: " << msg.message << "\n";
+//     peerNet->send_msg(MsgAck(), conn);
+// }
+
+
+
+
 void Node::primary_consensus_handler(MsgPrimaryConsensus &&msg, const Net::conn_t &conn) {
     cout <<"Node " << get_id() << "got signed message from " << conn->get_peer_id().to_hex() << "\n";
     RSAKeyGenerator keyManager;
@@ -159,14 +264,20 @@ void Node::primary_verified_handler(MsgPrimaryVerified &&msg, const Net::conn_t 
         currentOrderNumber = RSAKeyGenerator::getOrderNumber();
         std::string orderNumber = std::to_string(currentOrderNumber);
         std::string combinedData = orderNumber + client_request;
-        std::string signature = keyManager.SignMessage(combinedData, groupPrivateKey);
-        std::vector<salticidae::PeerId> consensus = TrustManager::consensusGroup;
-        for (const auto &pid: consensus) {
-            if (std::find(primary.begin(), primary.end(), pid) == primary.end()) {
-                peerNet->send_msg(MsgPreprepare(client_request, signature, orderNumber), pid);
+        try {
+            CryptoPP::RSA::PrivateKey groupPrivateKey = RSAKeyGenerator::getGroupPrivateKey(peerId);
+            std::string signature = keyManager.SignMessage(combinedData, groupPrivateKey);
+            std::vector<salticidae::PeerId> consensus = TrustManager::consensusGroup;
+            for (const auto &pid: consensus) {
+                if (std::find(primary.begin(), primary.end(), pid) == primary.end()) {
+                    peerNet->send_msg(MsgPreprepare(client_request, signature, orderNumber), pid);
+                }
             }
+            verified_message.clear();
+        } catch (const std::invalid_argument& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
         }
-        verified_message.clear();
+        
     }
 
 }
@@ -179,12 +290,20 @@ void Node::preprepare_handler(MsgPreprepare &&msg, const Net::conn_t &conn) {
     std::string message = msg.message;
     std::string orderNumber = msg.orderNumber;
     std::string combinedData = orderNumber + message;
+    CryptoPP::RSA::PublicKey groupPublicKey = RSAKeyGenerator::getGroupPublicKey();
     bool verify = keyManager.VerifySignature(combinedData, msg.signature, groupPublicKey);
+    cout << "bool value verify : " << verify << std::endl;
     if (verify == true) {
         cout << "Verified, sending to peers \n";
         std::string peer_signature = keyManager.SignMessage(combinedData, privateKey);
         std::vector<salticidae::PeerId> consensus = TrustManager::consensusGroup;
-        peerNet->multicast_msg(MsgPrepare(message, orderNumber, msg.signature, peer_signature), consensus);
+        for (const auto &pid: consensus) {
+            if(pid != peerId) {
+                peerNet->send_msg(MsgPrepare(message, orderNumber, msg.signature, peer_signature), pid);
+            }
+        }
+        
+        //peerNet->multicast_msg(MsgPrepare(message, orderNumber, msg.signature, peer_signature), consensus);
 
     } else {
         cout << "Verification failed \n";
@@ -199,11 +318,12 @@ void Node::prepare_handler(MsgPrepare &&msg, const Net::conn_t &conn){
     std::string combinedData = msg.orderNumber + msg.message;
     CryptoPP::RSA::PublicKey pubKey = publicKeysID[conn->get_peer_id()];
     bool verify_peer = keyManager.VerifySignature(combinedData, msg.peerSign, pubKey);
+    CryptoPP::RSA::PublicKey groupPublicKey = RSAKeyGenerator::getGroupPublicKey();
     bool verify_group = keyManager.VerifySignature(combinedData, msg.groupSign, groupPublicKey);
     if(verify_group == true && verify_peer == true) {
         //cout << "verified \n";
         RSAKeyGenerator::incrementPreparedMessages();
-        cout << RSAKeyGenerator::getPreparedMessages() << "\n";
+        // cout << RSAKeyGenerator::getPreparedMessages() << "\n";
     } else if (verify_group == true && verify_peer == false) {
         cout << conn->get_peer_id().to_hex() <<" might be faulty \n";
     } else if (verify_group == false && verify_peer == true) {
@@ -216,12 +336,11 @@ void Node::prepare_handler(MsgPrepare &&msg, const Net::conn_t &conn){
     cout << fault_tolerance << "\n";
    // cout<< "Node " << get_id() << " got " << prepared_messages << "messages \n";
     if (prepared_message >= fault_tolerance) {
-        cout<< "Total prepared messages: " << prepared_message << "messages \n";
-        std::hash<std::string> messagehash;
-        int hashvalue = messagehash(msg.message);
-        cout << "Hash is " << hashvalue << std::endl;
+        cout<< "Total prepared messages: " << prepared_message << " messages \n";
         //Msg Reply will come here
-    }
+        std::vector<salticidae::PeerId> consensus = TrustManager::consensusGroup;
+        peerNet->multicast_msg(MsgSend(true), consensus);
+    } 
     // Create PeerId for local and remote peers.
     salticidae::PeerId localPeer = peerId;
     salticidae::PeerId remotePeer = conn->get_peer_id();
@@ -232,6 +351,23 @@ void Node::prepare_handler(MsgPrepare &&msg, const Net::conn_t &conn){
     //cout << "TrustMap contents:\n";
     // Print the trustMap
     //TrustManager::printTrustMap();
+
+}
+
+//send reply handler
+void Node::send_reply_handler(MsgSend &&msg, const Net::conn_t &conn) {
+    cout << "Node " << get_id() << " got send reply message from " << conn->get_peer_id().to_hex()<<"\n";
+    peerNet->send_msg(MsgReply(true), client_id); 
+
+    //After sending the reply 
+    // Lock the mutex
+    std::unique_lock<std::mutex> lock(queueMutex);
+
+    // Set the flag indicating that the reply is sent
+    replySent = true; 
+
+    // Notify the waiting thread that the reply is sent
+    replyCondition.notify_one(); 
 
 }
 
@@ -393,21 +529,21 @@ void Node::result_handler(MsgResult &&msg, const Net::conn_t &conn) {
 
         cout << "\tc matches! Sending good reply to " << client.to_hex().substr(0, 10) << "\n";
         // The c is correctly computed so we send it to the client that requested the computation.
-        peerNet->send_msg(MsgReply(c, false), client);
+      //  peerNet->send_msg(MsgReply(c, false), client);
     } else {
         cout << "\tc DOES NOT match! Sending failure reply to " << client.to_hex().substr(0, 10) << "\n";
-        peerNet->send_msg(MsgReply(0, true), client);
+       // peerNet->send_msg(MsgReply(0, true), client);
     }
 }
 
 
 // We technically do not need this since only the client should receive reply messages.
-void Node::reply_handler(MsgReply &&msg, const Net::conn_t &conn) {
-    cout << "Node " << get_id() << " got reply message: \n";
-    cout << "\tFrom " << conn->get_peer_id().to_hex().substr(0, 10) << "\n";
-    cout << "\tWith c = " << msg.c << "\n";
-    cout << "\tAnd  fault = " << msg.fault << "\n";
-}
+// void Node::reply_handler(MsgReply &&msg, const Net::conn_t &conn) {
+//     cout << "Node " << get_id() << " got reply message: \n";
+//     cout << "\tFrom " << conn->get_peer_id().to_hex().substr(0, 10) << "\n";
+//     cout << "\tWith c = " << msg.c << "\n";
+//     cout << "\tAnd  fault = " << msg.fault << "\n";
+// }
 
 
 void Node::ack_handler(MsgAck &&msg, const Net::conn_t &conn) {

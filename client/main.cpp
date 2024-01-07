@@ -14,6 +14,7 @@ using salticidae::letoh;
 using std::cout;
 
 std::unique_ptr<Net> net;
+std::list<bool> verified_message;
 
 void message(std::vector<salticidae::PeerId> peers) {
     usleep(3000000); // in microseconds
@@ -48,8 +49,36 @@ void message(std::vector<salticidae::PeerId> peers) {
 void reply_handler(MsgReply &&msg, const Net::conn_t &conn) {
     cout << "Got reply from server:\n";
     cout << "\tFrom " << conn->get_peer_id().to_hex().substr(0, 10) << "\n";
-    cout << "\tc: " << msg.c << "\n";
-    cout << "\tis faulty?: " << msg.fault << "\n";
+    verified_message.push_back(msg.result);
+    int nodes = NUM_NODES;
+    int fault_tolerance = ((((D2*nodes) - 1) / 3)+((1-D2) * nodes)) + 1;
+    int replyTrue = 0;
+    int replyFalse = 0;
+    for (bool v : verified_message) {
+        if (v == true) {
+            replyTrue++;
+        } else {
+            replyFalse++;
+        }
+    }
+    if (replyTrue >= fault_tolerance) 
+    {
+        cout << "Transaction successfully registered \n";
+        net->send_msg(MsgAck(), conn);
+        replyTrue = 0;
+        verified_message.clear();
+    } else if (replyFalse >=fault_tolerance) {
+        cout << "Transaction registration failed \n";
+        net->send_msg(MsgAck(), conn);
+        replyFalse = 0;
+        verified_message.clear();
+    } else {
+        replyTrue = 0;
+        replyFalse = 0;
+    }
+    
+
+    cout << "\tis faulty?: " << msg.result << "\n";
 }
 
 void ack_handler(MsgAck &&msg, const Net::conn_t &conn) {

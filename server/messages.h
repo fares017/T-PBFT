@@ -250,13 +250,11 @@ struct MsgReply {
     //! Member variable storing the serialized version of the message.
     DataStream serialized;
 
-    //! Result number
-    int c;
     //! Is the second server faulty?
-    bool fault;
+    bool result;
 
     //! Serialize the object from C++ datatypes to a data stream we can send over the network.
-    MsgReply(const int &c, const bool &fault);
+    MsgReply(const bool &result);
     //! Serialize the object from a data stream to C++ datatypes.
     MsgReply(DataStream &&s);
 };
@@ -352,5 +350,13 @@ struct MsgPrimaryVerified{
     //! Serialize the object from a data stream to C++ datatypes.
     MsgPrimaryVerified(DataStream &&s);
 };
+//Msg to Ask Every consensus node to send reply;
+struct MsgSend {
+    static const opcode_t opcode = 0x15;
+    DataStream serialized;
+    bool sendReply;
 
+    MsgSend(const bool &sendReply);
+    MsgSend(DataStream &&s);
+};
 #endif

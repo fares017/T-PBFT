@@ -121,14 +121,13 @@ MsgResult::MsgResult(DataStream &&s) {
     Message for reply
 */
 const opcode_t MsgReply::opcode;
-MsgReply::MsgReply(const int &c, const bool &fault) {
-    serialized << fault;
-    serialized << c;
+MsgReply::MsgReply(const bool &result) {
+    serialized << result;
 }
 MsgReply::MsgReply(DataStream &&s) {
-    s >> fault;
-    s >> c;
+    s >> result;
 }
+//
 //Prepare message
 const opcode_t MsgPrepare::opcode;
 MsgPrepare::MsgPrepare(const std::string &message, const std::string &orderNumber, const std::string &groupSign, const std::string &peerSign){
@@ -243,4 +242,12 @@ MsgPrimaryVerified::MsgPrimaryVerified(const bool &verified) {
 }
 MsgPrimaryVerified::MsgPrimaryVerified(DataStream &&s) {
     s >> verified;
+}
+//MsgSend ask nodes to send reply after 2f
+const opcode_t MsgSend::opcode;
+MsgSend::MsgSend(const bool &sendReply) {
+    serialized << sendReply;
+}
+MsgSend::MsgSend(DataStream &&s) {
+    s >> sendReply;
 }

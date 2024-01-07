@@ -42,8 +42,7 @@ class Handler {
         */
         NodeVector *get_nodes() {
             return &nodes;
-        }
-        //CryptoPP::RSA::PublicKey groupPublicKey;
+        }   
 
     private:
         /**

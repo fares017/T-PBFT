@@ -14,8 +14,10 @@ Handler::Handler(const salticidae::EventContext &ec, const Net::Config config) {
     peers.resize(NUM_NODES);
     RSAKeyGenerator keyGenerator;
     std::unordered_map<salticidae::PeerId, CryptoPP::RSA::PublicKey> publicKeysID;
-    CryptoPP::RSA::PrivateKey groupPrivateKey = keyGenerator.GeneratePrivateKey();
-    CryptoPP::RSA::PublicKey groupPublicKey = keyGenerator.GeneratePublicKey(groupPrivateKey);
+    // CryptoPP::RSA::PrivateKey groupPrivateKey = keyGenerator.GeneratePrivateKey();
+    // CryptoPP::RSA::PublicKey groupPublicKey = keyGenerator.GeneratePublicKey(groupPrivateKey);
+    // std::vector<Node> nodes_replica;
+    // nodes_replica.resize(NUM_NODES);
 
     // Iterate over the number of nodes and create nodes.
     for (uint i = 0; i < NUM_NODES; i++) {
@@ -32,6 +34,7 @@ Handler::Handler(const salticidae::EventContext &ec, const Net::Config config) {
 
         // Create node/peer with its settings.
         nodes[i] = Node(ec, config, peer_addr, pid, privateKey, publicKey);
+
         // Register the message callbacks of the node.
         nodes[i].reg_handlers();
     }
@@ -151,15 +154,17 @@ Handler::Handler(const salticidae::EventContext &ec, const Net::Config config) {
     TrustManager::getPrimaryGroup(M2) ;
     TrustManager::printPrimaryGroup() ;
    // RSAKeyGenerator::assignGroupKey();
-   std::vector<salticidae::PeerId> primary_group = TrustManager::primaryGroup;
-   for (size_t i = 0; i < NUM_NODES; i++)
-    {
-        if (std::find(primary_group.begin(), primary_group.end(), nodes[i].peerId) != primary_group.end())
-        {
-            nodes[i].set_group_privateKey(groupPrivateKey);
-        }
-        nodes[i].set_group_publicKey(groupPublicKey);
-    }
+//    std::vector<salticidae::PeerId> primary_group = TrustManager::primaryGroup;
+//    for (size_t i = 0; i < NUM_NODES; i++)
+//     {
+//         if (std::find(primary_group.begin(), primary_group.end(), nodes[i].peerId) != primary_group.end())
+//         {
+//             nodes[i].set_group_privateKey(groupPrivateKey);
+//         }
+//         nodes[i].set_group_publicKey(groupPublicKey);
+//     }
     RSAKeyGenerator::randomValueGenerator();
+    RSAKeyGenerator::changeGroupKey();
 }
+
 

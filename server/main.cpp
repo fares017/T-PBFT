@@ -5,6 +5,7 @@
 #include "config.h"
 #include "handler.h"
 
+
 using std::cout;
 
 /** @file main.cpp
@@ -106,6 +107,8 @@ int main(int argc, char *argv[]) {
 
     // The handler class manages the creation of the nodes.
     Handler handler(ec, config);
+    
+    
 
     #ifdef DEBUG
     for (int i = 0; i < NUM_NODES; i++) {

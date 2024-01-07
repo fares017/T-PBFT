@@ -5,6 +5,8 @@ int RSAKeyGenerator::orderNumber = 0;
 int RSAKeyGenerator::randomValue = 0;
 int RSAKeyGenerator::prepared_messages =0;
 
+CryptoPP::RSA::PrivateKey RSAKeyGenerator::groupPrivateKey;
+CryptoPP::RSA::PublicKey RSAKeyGenerator::groupPublicKey;
 int RSAKeyGenerator::getOrderNumber() {
     return orderNumber;
 }
@@ -22,7 +24,8 @@ void RSAKeyGenerator::randomValueGenerator() {
     std::mt19937 generator(rd());
 
     // Define a distribution for the range of random values you want
-    std::uniform_int_distribution<int> distribution(0,3); // Change the range as needed
+    std::vector<salticidae::PeerId> primary = TrustManager::primaryGroup;
+    std::uniform_int_distribution<int> distribution(0,primary.size()-1); // Change the range as needed
 
     // Generate a random value
     randomValue = distribution(generator);
@@ -129,19 +132,50 @@ std::string RSAKeyGenerator::SignMessage(const std::string& message, const Crypt
 
     return signatureBase64;
 }
-void RSAKeyGenerator::assignGroupKey() {
-    RSAKeyGenerator keyGenerator;
-    CryptoPP::RSA::PrivateKey groupPrivateKey = keyGenerator.GeneratePrivateKey();
-    CryptoPP::RSA::PublicKey groupPublicKey = keyGenerator.GeneratePublicKey(groupPrivateKey);
-    // std::vector<salticidae::PeerId> primary_group = TrustManager::primaryGroup;
-    // NodeVector nodes = Handler::get_nodes();
-    // for (size_t i = 0; i < NUM_NODES; i++)
-    // {
-    //     if (std::find(primary_group.begin(), primary_group.end(), nodes[i].peerId) != primary_group.end())
-    //     {
-    //         nodes[i].set_group_privateKey(groupPrivateKey);
-    //     }
-    //     nodes[i].set_group_publicKey(groupPublicKey);
-    // }
+// void RSAKeyGenerator::assignGroupKey() {
+//     RSAKeyGenerator keyGenerator;
+//     CryptoPP::RSA::PrivateKey groupPrivateKey = keyGenerator.GeneratePrivateKey();
+//     CryptoPP::RSA::PublicKey groupPublicKey = keyGenerator.GeneratePublicKey(groupPrivateKey);
+//     std::vector<salticidae::PeerId> primary_group = TrustManager::primaryGroup;
+//     NodeVector nodes = Handler::get_nodes();
+//     for (size_t i = 0; i < NUM_NODES; i++)
+//     {
+//         if (std::find(primary_group.begin(), primary_group.end(), nodes[i].peerId) != primary_group.end())
+//         {
+//             nodes[i].set_group_privateKey(groupPrivateKey);
+//         }
+//         nodes[i].set_group_publicKey(groupPublicKey);
+//     }
 
+// }
+
+CryptoPP::RSA::PrivateKey RSAKeyGenerator::getGroupPrivateKey(const salticidae::PeerId peerId) {
+    std::vector<salticidae::PeerId> primary_group = TrustManager::primaryGroup;
+    if (std::find(primary_group.begin(), primary_group.end(), peerId) != primary_group.end()) {
+        return groupPrivateKey;
+    } else {
+        throw std::invalid_argument("Invalid Peer ID");
+    }
+}
+
+CryptoPP::RSA::PublicKey RSAKeyGenerator::getGroupPublicKey() {
+    return groupPublicKey;
+}
+
+void RSAKeyGenerator::changeGroupKey() {
+    RSAKeyGenerator keyGenerator;
+    CryptoPP::RSA::PrivateKey prKey = keyGenerator.GeneratePrivateKey();
+    CryptoPP::RSA::PublicKey puKey = keyGenerator.GeneratePublicKey(prKey);
+
+    const CryptoPP::Integer& n = prKey.GetModulus();
+    const CryptoPP::Integer& d = prKey.GetPrivateExponent();
+    const CryptoPP::Integer& e = prKey.GetPublicExponent();
+
+    // const CryptoPP::Integer& p = prKey.GetPrime1();
+    // const CryptoPP::Integer& q = prKey.GetPrime2();
+    groupPrivateKey.Initialize(n, e, d);
+    const CryptoPP::Integer& n2 = puKey.GetModulus();
+    const CryptoPP::Integer& e2 = puKey.GetPublicExponent();
+    groupPublicKey.Initialize(n2, e2);
+    
 }

@@ -7,13 +7,17 @@
 #include <salticidae/network.h>
 #include <functional>
 #include <crypto++/rsa.h>
-#include <openssl/evp.h>
-
-
+#include <openssl/evp.h> 
 #include "config.h"
 #include "messages.h"
 #include "rsakey.h"
 #include "TrustManager.h"
+#include <thread>
+#include <queue>
+#include <mutex>
+#include <condition_variable> 
+#include <unistd.h>
+
 
 using std::cout;
 using salticidae::_1;
@@ -54,6 +58,22 @@ class Node {
         CryptoPP::RSA::PrivateKey privateKey;
         CryptoPP::RSA::PublicKey publicKey;
 
+        
+        //To save requests in a queue 
+        //std::queue<MsgGroup> requestQueue;
+        // Declaration of the setter function
+        //void setRequestQueue(const std::queue<MsgGroup>& newQueue);
+        // // Mutex to protect access to the queue
+        // std::mutex queueMutex;
+        // // Condition variable to signal when a new item is added to the queue
+        // std::condition_variable queueCondition; 
+        // //Condition variable for the reply 
+        // std::condition_variable replyCondition;
+        bool replySent = false;
+        // Thread to process items from the queue
+
+
+
         //! Constructor creating a new node.
         Node(const salticidae::EventContext &ec, const Net::Config config, const salticidae::NetAddr paddr, const salticidae::PeerId pid, const CryptoPP::RSA::PrivateKey prKey, const CryptoPP::RSA::PublicKey puKey);
         Node();
@@ -72,9 +92,9 @@ class Node {
         //set consensus group
         void set_consensusgroup(std::vector<salticidae::PeerId> consensus_group);
         //set group private key
-        void set_group_privateKey(CryptoPP::RSA::PrivateKey groupPrivateKey);
-        //set group public key
-        void set_group_publicKey(CryptoPP::RSA::PublicKey groupPublicKey);
+        // void set_group_privateKey(CryptoPP::RSA::PrivateKey groupPrivateKey);
+        // //set group public key
+        // void set_group_publicKey(CryptoPP::RSA::PublicKey groupPublicKey);
 
         /**
          * Member function to register all the message callback handlers.
@@ -114,8 +134,8 @@ class Node {
         std::vector<salticidae::PeerId> peers;
         std::vector<salticidae::PeerId> primary_group;
         std::vector<salticidae::PeerId> consensus_group;
-        CryptoPP::RSA::PrivateKey groupPrivateKey;
-        CryptoPP::RSA::PublicKey groupPublicKey;
+        // CryptoPP::RSA::PrivateKey groupPrivateKey;
+        // CryptoPP::RSA::PublicKey groupPublicKey;
         
 
         std::unordered_map<salticidae::PeerId, CryptoPP::RSA::PublicKey> publicKeysID;
@@ -184,9 +204,14 @@ class Node {
         void prepare_handler(MsgPrepare &&msg, const Net::conn_t &conn);
         void commit_handler(MsgCommit &&msg, const Net::conn_t &conn);
         void preprepare_handler(MsgPreprepare &&msg, const Net::conn_t &conn);
-        void group_handler(MsgGroup &&msg, const Net::conn_t &conn);
+        //void group_handler(MsgGroup &&msg, const Net::conn_t &conn);
         void primary_consensus_handler(MsgPrimaryConsensus &&msg, const Net::conn_t &conn);
         void primary_verified_handler(MsgPrimaryVerified &&msg, const Net::conn_t &conn);
+        void send_reply_handler(MsgSend &&msg, const Net::conn_t &conn);
+        void group_request_handler(MsgGroup &&msg, const Net::conn_t &conn);
+        void process_group_request(const MsgGroup msg, const Net::conn_t conn); 
+
+
         /**
          * @ingroup MessageHandlerGroup
          * 
