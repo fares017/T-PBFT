@@ -194,6 +194,9 @@ void Node::primary_verified_handler(MsgPrimaryVerified &&msg, const Net::conn_t 
         client_request = "";
         busy = false;
         bool check = requestQueue.empty();
+        TrustManager::getConsensusGroup(D2) ;
+        TrustManager::getPrimaryGroup(M2) ;
+        RSAKeyGenerator::changeGroupKey();
         peerNet->multicast_msg(MsgNextRequest(true), peers);
         cout << "Check queue 2: " << check << ".Size is:  " <<requestQueue.size()<< "\n";
         if(!check && !busy) {
@@ -210,6 +213,9 @@ void Node::primary_verified_handler(MsgPrimaryVerified &&msg, const Net::conn_t 
         requestQueue.size();
         client_request = "";
         busy = false;
+        TrustManager::getConsensusGroup(D2) ;
+        TrustManager::getPrimaryGroup(M2) ;
+        RSAKeyGenerator::changeGroupKey();
         bool check = requestQueue.empty();
         peerNet->multicast_msg(MsgNextRequest(true), peers);
         cout << "Check queue 2: " << check << ".Size is:  " <<requestQueue.size()<< "\n";
@@ -308,6 +314,9 @@ void Node::prepare_handler(MsgPrepare &&msg, const Net::conn_t &conn){
         requestQueue.size();
         client_request = "";
         busy = false;
+        TrustManager::getConsensusGroup(D2) ;
+        TrustManager::getPrimaryGroup(M2) ;
+        RSAKeyGenerator::changeGroupKey();
         bool check = requestQueue.empty();
         peerNet->multicast_msg(MsgNextRequest(true), peers);
         cout << "Check queue 2: " << check << ".Size is:  " <<requestQueue.size()<< "\n";
@@ -384,6 +393,8 @@ void Node::process_next_request(const MsgNextRequest &&msg, const Net::conn_t &c
         busy=true;
     }
 }
+
+
 void next_request_ack(const MsgNextAck &&msg, const Net::conn_t &conn) {
 
 }
