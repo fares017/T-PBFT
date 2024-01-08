@@ -4,6 +4,7 @@
 #include <string>
 #include<iostream>
 #include <salticidae/msg.h>
+#include <salticidae/network.h>
 #include <crypto++/rsa.h>
 #include "config.h"
 
@@ -252,9 +253,10 @@ struct MsgReply {
 
     //! Is the second server faulty?
     bool result;
+    std::string orderNumber;
 
     //! Serialize the object from C++ datatypes to a data stream we can send over the network.
-    MsgReply(const bool &result);
+    MsgReply(const bool &result, const std::string &orderNumber);
     //! Serialize the object from a data stream to C++ datatypes.
     MsgReply(DataStream &&s);
 };
@@ -355,8 +357,65 @@ struct MsgSend {
     static const opcode_t opcode = 0x15;
     DataStream serialized;
     bool sendReply;
+    std::string orderNumber;
 
-    MsgSend(const bool &sendReply);
+    MsgSend(const bool &sendReply, const std::string &orderNumber);
     MsgSend(DataStream &&s);
 };
+//Msg for next request in queue
+struct MsgNextRequest {
+    static const opcode_t opcode = 0x16;
+    DataStream serialized;
+    bool sendReply;
+
+    MsgNextRequest(const bool &sendReply);
+    MsgNextRequest(DataStream &&s);
+};
+struct MsgNextAck {
+    static const opcode_t opcode = 0x17;
+    DataStream serialized;
+    std::string message;
+    salticidae::PeerId connId;
+
+    MsgNextAck(const std::string &message, const salticidae::PeerId &connId);
+    MsgNextAck(DataStream &&s);
+};
+
+struct MsgQueue {
+    //! Set unique opcode for this message.
+    static const opcode_t opcode = 0x19;
+    //! Member variable storing the serialized version of the message.
+    DataStream serialized;
+
+    //! Serialize the object from C++ datatypes to a data stream we can send over the network.
+    MsgQueue();
+    //! Serialize the object from a data stream to C++ datatypes.
+    MsgQueue(DataStream &&s);
+};
+
+
+//----------VIEW CHANGES MESSAGES-----------------
+
+
+
+
+/**
+ * @ingroup MessageTypes
+ * 
+ * @brief Request for view change messgae.
+*/
+struct MsgRequestViewChange {
+    //! Set unique opcode for this message.
+    static const opcode_t opcode = 0x18;
+    //! Member variable storing the serialized version of the message.
+    DataStream serialized;
+
+    std::string message;
+
+    //! Serialize the object from C++ datatypes to a data stream we can send over the network.
+    MsgRequestViewChange(const std::string &message);
+    //! Serialize the object from a data stream to C++ datatypes.
+    MsgRequestViewChange(DataStream &&s);
+};
+
 #endif

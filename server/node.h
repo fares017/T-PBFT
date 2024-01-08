@@ -57,6 +57,8 @@ class Node {
         salticidae::PeerId peerId;
         CryptoPP::RSA::PrivateKey privateKey;
         CryptoPP::RSA::PublicKey publicKey;
+       // QueueRequest queueRequest;
+
 
         
         //To save requests in a queue 
@@ -69,7 +71,7 @@ class Node {
         // std::condition_variable queueCondition; 
         // //Condition variable for the reply 
         // std::condition_variable replyCondition;
-        bool replySent = false;
+        
         // Thread to process items from the queue
 
 
@@ -77,6 +79,17 @@ class Node {
         //! Constructor creating a new node.
         Node(const salticidae::EventContext &ec, const Net::Config config, const salticidae::NetAddr paddr, const salticidae::PeerId pid, const CryptoPP::RSA::PrivateKey prKey, const CryptoPP::RSA::PublicKey puKey);
         Node();
+
+         // Function to start the timer
+        void startTimer();
+
+        // Function to pause the timer
+        void pauseTimer();
+
+        // Function to reset and reinitialize the timer
+        void resetTimer();
+
+        double getElapsedTimeInSeconds() const;
 
         /**
          * @brief Set the vector of known peers for this node.
@@ -91,6 +104,8 @@ class Node {
         void set_primarygroup(std::vector<salticidae::PeerId> primary_group);
         //set consensus group
         void set_consensusgroup(std::vector<salticidae::PeerId> consensus_group);
+        //set all nodes
+        void set_allNodes(std::vector<salticidae::PeerId> allNodes);
         //set group private key
         // void set_group_privateKey(CryptoPP::RSA::PrivateKey groupPrivateKey);
         // //set group public key
@@ -131,15 +146,20 @@ class Node {
          * Peers in this vector describe the nodes we should broadcast messages to.
         */
        // static RSAKeyGenerator keyManager;
+
         std::vector<salticidae::PeerId> peers;
+        std::vector<salticidae::PeerId> allNodes;
         std::vector<salticidae::PeerId> primary_group;
         std::vector<salticidae::PeerId> consensus_group;
         // CryptoPP::RSA::PrivateKey groupPrivateKey;
         // CryptoPP::RSA::PublicKey groupPublicKey;
+        bool busy = false;
+        
         
 
         std::unordered_map<salticidae::PeerId, CryptoPP::RSA::PublicKey> publicKeysID;
         uint8_t num_acks = 0;
+        static int total_view_change_requests;
 
         std::unordered_map<salticidae::PeerId, bool> pidmap;
         int nodes = NUM_NODES; 
@@ -153,6 +173,8 @@ class Node {
         std::list<MsgCommit> commit_message;
         std::list<bool> verified_message;
         unsigned long prepared_messages = 0;
+        std::list<std::pair<salticidae::PeerId, std::string>> requestQueue;
+        
         /**
          * A handler is called when its specific message type gets received.
          * Operations resulting from receiving that message can then be done in the body of the member function.
@@ -209,7 +231,12 @@ class Node {
         void primary_verified_handler(MsgPrimaryVerified &&msg, const Net::conn_t &conn);
         void send_reply_handler(MsgSend &&msg, const Net::conn_t &conn);
         void group_request_handler(MsgGroup &&msg, const Net::conn_t &conn);
-        void process_group_request(const MsgGroup msg, const Net::conn_t conn); 
+        //void process_queue();
+        void process_group_request(const std::string msg, const salticidae::PeerId conn); 
+        void process_next_request(const MsgNextRequest &&msg, const Net::conn_t &conn);
+        void next_request_ack(const MsgNextAck &&msg, const Net::conn_t &conn);
+         //-----------View change--------------
+        void request_viewchange_handler(MsgRequestViewChange &&msg, const Net::conn_t &conn);
 
 
         /**

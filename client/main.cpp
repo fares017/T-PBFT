@@ -16,6 +16,11 @@ using std::cout;
 std::unique_ptr<Net> net;
 std::list<bool> verified_message;
 
+void message2 (std::vector<salticidae::PeerId> peers) {
+    usleep(3000000);
+    cout<< "sending messages! \n";
+    net->multicast_msg(MsgGroup("retreat"), peers);
+}
 void message(std::vector<salticidae::PeerId> peers) {
     usleep(3000000); // in microseconds
     cout << "Sending message!\n";
@@ -24,6 +29,8 @@ void message(std::vector<salticidae::PeerId> peers) {
     //net->send_msg(MsgRequest(25, 75), pid);
     //net->send_msg(MsgPreprepare("at"), pid);
     net->multicast_msg(MsgGroup("attackerrelease"), peers);
+    //net->multicast_msg(MsgGroup("retreat"), peers);
+   // net->multicast_msg(MsgGroup("leavemealone"), peers);
     // net->send_msg(MsgGroup("attackerrelease"), pid2);
     // net->send_msg(MsgGroup("attackerrelease"), pid3);
     //usleep(2000000); // in microseconds
@@ -78,7 +85,8 @@ void reply_handler(MsgReply &&msg, const Net::conn_t &conn) {
     }
     
 
-    cout << "\tis faulty?: " << msg.result << "\n";
+    cout << "\tis okay?: " << msg.result << "\n";
+    cout << "\t orderNumber: " << msg.orderNumber << std::endl;
 }
 
 void ack_handler(MsgAck &&msg, const Net::conn_t &conn) {
@@ -147,6 +155,8 @@ int main() {
     // salticidae::PeerId pid3 = connect_peer(address_string_2);
 
     std::thread thread_obj(message, peers);
+    //usleep(5000000);
+    std::thread thread_obj2(message2, peers);
 
 
     ec.dispatch();

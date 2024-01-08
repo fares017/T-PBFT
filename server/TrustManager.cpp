@@ -219,3 +219,86 @@ void TrustManager::printPrimaryGroup() {
         std::cout << "Node ID: " << node.to_hex() << "\n";
     }
 }
+//-------------in case of a diffrent topology we use the following algorithms, and we modify them accordingly-----------------
+
+// void algorithm1(Node nodei, std::vector<Node> Nodes, std::vector<Node>& TxNodes, std::vector<Node>& NonTxNodes) {
+//     TxNodes.clear();
+//     NonTxNodes.clear();
+
+//     for (Node nodej : Nodes) {
+//         if (trades(nodej, nodei)) {
+//             TxNodes.push_back(nodej);
+//         } else {
+//             NonTxNodes.push_back(nodej);
+//         }
+//     }
+// }
+
+
+
+void TrustManager::updateIndirectTrust(const salticidae::PeerId& localPeer) {
+    // Create a map to store accumulated trust values for indirect relations
+    std::unordered_map<salticidae::PeerId, double> indirectTrustMap;
+
+    // Iterate over the trustMap
+    for (const auto& entry : trustMap) {
+        const auto& key = entry.first;
+        const auto& value = entry.second;
+
+        // Check if the localPeer is involved in the trust relation
+        if (key.first == localPeer || key.second == localPeer) {
+            // Determine the remote peer in the relation
+            salticidae::PeerId remotePeer = (key.first == localPeer) ? key.second : key.first;
+
+            // Update the indirect trust value for the remotePeer
+            updateIndirectTrustRecursive(localPeer, remotePeer, indirectTrustMap);
+        }
+    }
+
+    // Normalize and update the Direct_Trust values based on the accumulated indirect trust
+    for (auto& entry : trustMap) {
+        auto& key = entry.first;
+        auto& value = entry.second;
+
+        // Check if the localPeer is involved in the trust relation
+        if (key.first == localPeer || key.second == localPeer) {
+            // Determine the remote peer in the relation
+            salticidae::PeerId remotePeer = (key.first == localPeer) ? key.second : key.first;
+
+            // Retrieve the normalized indirect trust value for the remotePeer
+            double indirectTrust = indirectTrustMap[remotePeer];
+
+            // Update the Direct_Trust value in TrustInfo
+            value.Direct_Trust = indirectTrust;
+        }
+    }
+}
+
+void TrustManager::updateIndirectTrustRecursive(const salticidae::PeerId& source, const salticidae::PeerId& current, std::unordered_map<salticidae::PeerId, double>& indirectTrustMap) {
+    // Base case: if the source and current nodes are the same, set trust to 1
+    if (source == current) {
+        indirectTrustMap[current] = 1.0;
+        return;
+    }
+
+    // Iterate over the trustMap to find relations involving the current node
+    for (const auto& entry : trustMap) {
+        const auto& key = entry.first;
+        const auto& value = entry.second;
+
+        // Check if the current node is involved in another trust relation
+        if ((key.first == current || key.second == current) && key.first != key.second) {
+            // Determine the next node in the chain
+            salticidae::PeerId nextNode = (key.first == current) ? key.second : key.first;
+
+            // Check if the next node is not already in the indirectTrustMap
+            if (indirectTrustMap.find(nextNode) == indirectTrustMap.end()) {
+                // Recursively update the indirect trust value for the next node
+                updateIndirectTrustRecursive(source, nextNode, indirectTrustMap);
+            }
+
+            // Update the indirect trust value for the current node
+            indirectTrustMap[current] += value.Direct_Trust * indirectTrustMap[nextNode];
+        }
+    }
+}

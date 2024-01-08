@@ -30,7 +30,8 @@ Handler::Handler(const salticidae::EventContext &ec, const Net::Config config) {
         //Assign RSA public key private key
         CryptoPP::RSA::PrivateKey privateKey = keyGenerator.GeneratePrivateKey();
         CryptoPP::RSA::PublicKey publicKey = keyGenerator.GeneratePublicKey(privateKey);
-        publicKeysID[pid] = publicKey;
+        publicKeysID[pid] = publicKey; 
+        
 
         // Create node/peer with its settings.
         nodes[i] = Node(ec, config, peer_addr, pid, privateKey, publicKey);
@@ -76,6 +77,7 @@ Handler::Handler(const salticidae::EventContext &ec, const Net::Config config) {
 
         nodes[i].set_peers(temp_peers);
         nodes[i].set_publickeys(publicKeysID);
+        nodes[i].set_allNodes(peers);
         //nodes[i].set_group_publicKey(groupPublicKey);
     }
 
@@ -164,6 +166,7 @@ Handler::Handler(const salticidae::EventContext &ec, const Net::Config config) {
 //         nodes[i].set_group_publicKey(groupPublicKey);
 //     }
     RSAKeyGenerator::randomValueGenerator();
+    //queueRequest::randomValueGenerator();
     RSAKeyGenerator::changeGroupKey();
 }
 

@@ -121,10 +121,16 @@ MsgResult::MsgResult(DataStream &&s) {
     Message for reply
 */
 const opcode_t MsgReply::opcode;
-MsgReply::MsgReply(const bool &result) {
+MsgReply::MsgReply(const bool &result, const std::string &orderNumber) {
+    serialized << htole((uint32_t)orderNumber.length());
+    serialized << orderNumber;
     serialized << result;
 }
 MsgReply::MsgReply(DataStream &&s) {
+    uint32_t len;
+    s >> len;
+    len = letoh(len);
+    orderNumber = std::string((const char *)s.get_data_inplace(len), len);
     s >> result;
 }
 //
@@ -245,9 +251,54 @@ MsgPrimaryVerified::MsgPrimaryVerified(DataStream &&s) {
 }
 //MsgSend ask nodes to send reply after 2f
 const opcode_t MsgSend::opcode;
-MsgSend::MsgSend(const bool &sendReply) {
+MsgSend::MsgSend(const bool &sendReply, const std::string &orderNumber) {
+    serialized << htole((uint32_t)orderNumber.length());
+    serialized << orderNumber;
     serialized << sendReply;
 }
 MsgSend::MsgSend(DataStream &&s) {
+    uint32_t len;
+    s >> len;
+    len = letoh(len);
+    orderNumber = std::string((const char *)s.get_data_inplace(len), len);
     s >> sendReply;
+}
+
+const opcode_t MsgNextRequest::opcode;
+MsgNextRequest::MsgNextRequest(const bool &sendReply) {
+    serialized << sendReply;
+}
+MsgNextRequest::MsgNextRequest(DataStream &&s) {
+    s >> sendReply;
+}
+
+const opcode_t MsgNextAck::opcode;
+MsgNextAck::MsgNextAck(const std::string &message, const salticidae::PeerId &connId) {
+    serialized << htole((uint32_t)message.length());
+    serialized << message;
+    serialized<< connId;
+
+}
+MsgNextAck::MsgNextAck(DataStream &&s) {
+    uint32_t len;
+    s >> len;
+    len = letoh(len);
+    message = std::string((const char *)s.get_data_inplace(len), len);
+    s >> connId;
+}
+
+//---------------------VIEW CHANGE--------------------------------------------
+
+//Prepare message
+const opcode_t MsgRequestViewChange::opcode;
+MsgRequestViewChange::MsgRequestViewChange(const std::string &message){
+    serialized << htole((uint32_t)message.length());
+    serialized << message;
+}
+MsgRequestViewChange::MsgRequestViewChange(DataStream &&s){
+    uint32_t len;
+    s >> len;
+    len = letoh(len);
+    message = std::string((const char *)s.get_data_inplace(len), len);
+
 }

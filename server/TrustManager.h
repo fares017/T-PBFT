@@ -44,6 +44,9 @@ public:
     static void updateGlobalTrust(const salticidae::PeerId& localPeer);
 
     static void updateDirectTrust(const salticidae::PeerId& localPeer) ;
+    static void updateIndirectTrust(const salticidae::PeerId& localPeer) ;
+
+    static void updateIndirectTrustRecursive(const salticidae::PeerId& source, const salticidae::PeerId& current, std::unordered_map<salticidae::PeerId, double>& indirectTrustMap);
 
     static void getConsensusGroup(double d);
     static void getPrimaryGroup(double d);

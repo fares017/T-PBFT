@@ -35,6 +35,7 @@ checkpoint.o: checkpoint.cpp checkpoint.h
 	$(CXX) $(CXXFLAGS) -c checkpoint.cpp 
 
 
+
 .PHONY: clean
 clean:
 	rm *.o main
