@@ -205,6 +205,23 @@ void Node::primary_verified_handler(MsgPrimaryVerified &&msg, const Net::conn_t 
             //queueRequest::ifBusy = true;
             busy=true;
         }
+    } else if (verifyFalse > verifyTrue ) {
+        requestQueue.pop_front();
+        requestQueue.size();
+        client_request = "";
+        busy = false;
+        bool check = requestQueue.empty();
+        peerNet->multicast_msg(MsgNextRequest(true), peers);
+        cout << "Check queue 2: " << check << ".Size is:  " <<requestQueue.size()<< "\n";
+        if(!check && !busy) {
+            std::pair<salticidae::PeerId, std::string> nextRequest(requestQueue.front());
+            salticidae::PeerId client_conn_id = nextRequest.first;
+            std::string client_conn_request = nextRequest.second;
+        // MsgGroup receivedMsg = client_conn_request;
+            Node::process_group_request(client_conn_request, client_conn_id);
+            //queueRequest::ifBusy = true;
+            busy=true;
+        }
     }
 
 }
