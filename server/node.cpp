@@ -188,7 +188,7 @@ void Node::primary_verified_handler(MsgPrimaryVerified &&msg, const Net::conn_t 
         } catch (const std::invalid_argument& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         }
-    } else if (verifyFalse == primary_size-1) {
+    } else if (verifyFalse == (primary_size-1) || verifyFalse > verifyTrue ) {
         requestQueue.pop_front();
         requestQueue.size();
         client_request = "";
