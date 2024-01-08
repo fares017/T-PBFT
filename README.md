@@ -33,6 +33,7 @@ The skeleton code needs the following Linux (Debian/Ubuntu) packages installed:
  - cmake
  - libuv1-dev
  - libssl-dev
+ - libcrypto++-dev
 
 The code was made under WSL2 with Ubuntu 22.04.2 LTS but should also run natively on Ubuntu and related Distros.
 
