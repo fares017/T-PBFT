@@ -29,7 +29,7 @@ void message(std::vector<salticidae::PeerId> peers) {
     //net->send_msg(MsgRequest(25, 75), pid);
     //net->send_msg(MsgPreprepare("at"), pid);
     net->multicast_msg(MsgGroup("attackerrelease"), peers);
-    //net->multicast_msg(MsgGroup("retreat"), peers);
+    net->multicast_msg(MsgGroup("retreat"), peers);
    // net->multicast_msg(MsgGroup("leavemealone"), peers);
     // net->send_msg(MsgGroup("attackerrelease"), pid2);
     // net->send_msg(MsgGroup("attackerrelease"), pid3);
@@ -155,8 +155,9 @@ int main() {
     // salticidae::PeerId pid3 = connect_peer(address_string_2);
 
     std::thread thread_obj(message, peers);
-    //usleep(5000000);
     std::thread thread_obj2(message2, peers);
+
+    //std::thread thread_obj2(message2, peers);
 
 
     ec.dispatch();

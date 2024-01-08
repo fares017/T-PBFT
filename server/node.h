@@ -222,9 +222,8 @@ class Node {
          * 
          * @brief Handler for when a MsgString message gets received.
         */
-        void string_handler(MsgString &&msg, const Net::conn_t &conn);
+        
         void prepare_handler(MsgPrepare &&msg, const Net::conn_t &conn);
-        void commit_handler(MsgCommit &&msg, const Net::conn_t &conn);
         void preprepare_handler(MsgPreprepare &&msg, const Net::conn_t &conn);
         //void group_handler(MsgGroup &&msg, const Net::conn_t &conn);
         void primary_consensus_handler(MsgPrimaryConsensus &&msg, const Net::conn_t &conn);
@@ -234,7 +233,6 @@ class Node {
         //void process_queue();
         void process_group_request(const std::string msg, const salticidae::PeerId conn); 
         void process_next_request(const MsgNextRequest &&msg, const Net::conn_t &conn);
-        void next_request_ack(const MsgNextAck &&msg, const Net::conn_t &conn);
          //-----------View change--------------
         void request_viewchange_handler(MsgRequestViewChange &&msg, const Net::conn_t &conn);
 
@@ -244,7 +242,6 @@ class Node {
          * 
          * @brief Handler for when a MsgVote message gets received.
         */
-        void vote_handler(MsgVote &&msg, const Net::conn_t &conn);
         /**
          * @ingroup MessageHandlerGroup
          * 

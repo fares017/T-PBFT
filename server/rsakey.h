@@ -22,9 +22,6 @@ class RSAKeyGenerator {
         RSAKeyGenerator();
         CryptoPP::RSA::PrivateKey GeneratePrivateKey(); //Method to generate private key
         CryptoPP::RSA::PublicKey GeneratePublicKey(const CryptoPP::RSA::PrivateKey& privateKey); //Method to generate public key
-        // EVP_PKEY* ConvertPrivatetoEVP(const CryptoPP::RSA::PrivateKey& privateKey); //not used
-        // EVP_PKEY* ConvertPublictoEVP(const CryptoPP::RSA::PublicKey& publicKey); //not used
-        // BIGNUM *bnfromInteger(const CryptoPP::Integer& integer); //not using
         bool VerifySignature(const std::string& message, const std::string& signature, const CryptoPP::RSA::PublicKey& publicKey); //method to verify signature with public key
         std::string SignMessage(const std::string &message, const CryptoPP::RSA::PrivateKey &privateKey); //method to sign the message and order number with private key;
         static int getOrderNumber();  // Method to retrieve the current order number

@@ -55,49 +55,8 @@ CryptoPP::RSA::PublicKey RSAKeyGenerator::GeneratePublicKey(const CryptoPP::RSA:
     CryptoPP::RSA::PublicKey publicKey(privateKey);
     return publicKey;
 }
-// BIGNUM *RSAKeyGenerator::bnfromInteger(const CryptoPP::Integer& integer) {
-//     CryptoPP::SecByteBlock byteBlock(integer.ByteCount());
-//     integer.Encode(byteBlock.BytePtr(), byteBlock.SizeInBytes());
-//     return BN_bin2bn(byteBlock.BytePtr(), byteBlock.SizeInBytes(), nullptr);
-// }
 
-// EVP_PKEY* RSAKeyGenerator::ConvertPrivatetoEVP(const CryptoPP::RSA::PrivateKey& privateKey) {
-//     const CryptoPP::Integer& n = privateKey.GetModulus();
-//     const CryptoPP::Integer& d = privateKey.GetPrivateExponent();
-//     const CryptoPP::Integer& e = privateKey.GetPublicExponent();
-//     const CryptoPP::Integer& p = privateKey.GetPrime1();
-//     const CryptoPP::Integer& q = privateKey.GetPrime2();
 
-//     BIGNUM *bn_n = bnfromInteger(n);
-//     BIGNUM *bn_d = bnfromInteger(d);
-//     BIGNUM *bn_e= bnfromInteger(e);
-//     BIGNUM *bn_p= bnfromInteger(p);
-//     BIGNUM *bn_q= bnfromInteger(q);
-
-//     RSA* rsa = RSA_new();
-//     RSA_set0_key(rsa, bn_n, bn_e, bn_d);
-//     RSA_set0_factors(rsa, bn_p, bn_q);
-//     EVP_PKEY* evpKey = EVP_PKEY_new();
-//     EVP_PKEY_assign_RSA(evpKey, rsa);
-
-//     return evpKey;
-// }
-
-// EVP_PKEY* RSAKeyGenerator::ConvertPublictoEVP(const CryptoPP::RSA::PublicKey& publicKey) {
-//     const CryptoPP::Integer& n = publicKey.GetModulus();
-//     const CryptoPP::Integer& d = publicKey.GetPublicExponent();
-
-    
-//     BIGNUM *bn_n = bnfromInteger(n);
-//     BIGNUM *bn_d = bnfromInteger(d);
-
-//     RSA* rsa = RSA_new();
-//     RSA_set0_key(rsa, bn_n, bn_d, nullptr);
-//     EVP_PKEY* evpKey = EVP_PKEY_new();
-//     EVP_PKEY_assign_RSA(evpKey, rsa);
-
-//     return evpKey;
-// }
 
 bool RSAKeyGenerator::VerifySignature(const std::string& message, const std::string& signature, const CryptoPP::RSA::PublicKey& publicKey) {
     CryptoPP::SHA256 sha256;
@@ -132,22 +91,6 @@ std::string RSAKeyGenerator::SignMessage(const std::string& message, const Crypt
 
     return signatureBase64;
 }
-// void RSAKeyGenerator::assignGroupKey() {
-//     RSAKeyGenerator keyGenerator;
-//     CryptoPP::RSA::PrivateKey groupPrivateKey = keyGenerator.GeneratePrivateKey();
-//     CryptoPP::RSA::PublicKey groupPublicKey = keyGenerator.GeneratePublicKey(groupPrivateKey);
-//     std::vector<salticidae::PeerId> primary_group = TrustManager::primaryGroup;
-//     NodeVector nodes = Handler::get_nodes();
-//     for (size_t i = 0; i < NUM_NODES; i++)
-//     {
-//         if (std::find(primary_group.begin(), primary_group.end(), nodes[i].peerId) != primary_group.end())
-//         {
-//             nodes[i].set_group_privateKey(groupPrivateKey);
-//         }
-//         nodes[i].set_group_publicKey(groupPublicKey);
-//     }
-
-// }
 
 CryptoPP::RSA::PrivateKey RSAKeyGenerator::getGroupPrivateKey(const salticidae::PeerId peerId) {
     std::vector<salticidae::PeerId> primary_group = TrustManager::primaryGroup;
@@ -171,8 +114,6 @@ void RSAKeyGenerator::changeGroupKey() {
     const CryptoPP::Integer& d = prKey.GetPrivateExponent();
     const CryptoPP::Integer& e = prKey.GetPublicExponent();
 
-    // const CryptoPP::Integer& p = prKey.GetPrime1();
-    // const CryptoPP::Integer& q = prKey.GetPrime2();
     groupPrivateKey.Initialize(n, e, d);
     const CryptoPP::Integer& n2 = puKey.GetModulus();
     const CryptoPP::Integer& e2 = puKey.GetPublicExponent();
