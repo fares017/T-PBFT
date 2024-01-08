@@ -1,5 +1,5 @@
 # T-PBFT-Protocol-Framework
-
+This reposiroty contains the implementation of T-PBFT protocol, provided in the paper [T-PBFT](https://mypage.cuhk.edu.cn/academics/caiwei/paper/papers/GaoYZC2019.pdf). 
 
 
 ## How to use this code and what it is
